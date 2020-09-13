@@ -246,14 +246,23 @@ export class Creating extends React.Component {
         title: e.target.value
       })
     }), /*#__PURE__*/React.createElement(Input, {
-      type: "number",
       pattern: "[0-9]*",
       top: "\u0421\u0443\u043C\u043C\u0430, \u20BD",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0441\u043E\u0431\u0440\u0430\u0442\u044C?",
-      value: donation.need || undefined,
-      onChange: e => this.setDonation({
-        need: parseFloat(e.target.value)
-      })
+      value: donation.need || '',
+      onChange: e => {
+        const donationNeed = parseFloat(e.target.value); // prevent passing NaN or negative numbers as donation.need value
+
+        if (!isNaN(donationNeed) && donationNeed >= 0) {
+          this.setDonation({
+            need: donationNeed
+          });
+        } else {
+          this.setDonation({
+            need: 0
+          });
+        }
+      }
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0426\u0435\u043B\u044C",
       placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430",
