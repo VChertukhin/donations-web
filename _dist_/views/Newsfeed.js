@@ -1,5 +1,5 @@
 import React from '../../web_modules/react.js';
-import { View, Panel, PanelHeader, Button, PanelHeaderBack, Div } from '../../web_modules/@vkontakte/vkui.js';
+import { View, Panel, PanelHeader, Button, PanelHeaderBack } from '../../web_modules/@vkontakte/vkui.js';
 import SnippetDonation from '../components/SnippetDonation/SnippetDonation.js';
 import { moneyFormat } from '../lib.js';
 export class Newsfeed extends React.Component {
@@ -31,7 +31,8 @@ export class Newsfeed extends React.Component {
       progress: `Собрано ${moneyFormat(8750)} ₽ из ${moneyFormat(donation.need)} ₽`,
       value: 8750 * 100 / donation.need,
       action: /*#__PURE__*/React.createElement(Button, {
-        mode: "outline"
+        mode: "outline",
+        onClick: () => setView('viewing')
       }, "\u041F\u043E\u043C\u043E\u0447\u044C"),
       background: /*#__PURE__*/React.createElement("div", {
         style: {
@@ -42,11 +43,7 @@ export class Newsfeed extends React.Component {
           height: 140
         }
       })
-    }), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "l",
-      stretched: true,
-      onClick: () => setView('viewing')
-    }, "\u0414\u0430\u043B\u0435\u0435"))));
+    })));
   }
 
 }

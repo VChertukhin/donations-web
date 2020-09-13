@@ -1,7 +1,7 @@
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 import React from '../../web_modules/react.js';
-import { View, Panel, PanelHeader, Placeholder, Button, PanelHeaderBack, Banner, Div, FormLayout, Input, Textarea, SelectMimicry, FormLayoutGroup, Radio, List, SimpleCell, Avatar, DatePicker, ModalRoot, ModalCard } from '../../web_modules/@vkontakte/vkui.js';
+import { View, Panel, PanelHeader, Placeholder, Button, PanelHeaderBack, Banner, Div, FormLayout, Input, Textarea, SelectMimicry, FormLayoutGroup, Radio, List, SimpleCell, Avatar, DatePicker, ModalRoot, ModalCard, FixedLayout } from '../../web_modules/@vkontakte/vkui.js';
 import { Icon28TargetOutline, Icon28CalendarOutline, Icon28PictureOutline, Icon24Done } from '../../web_modules/@vkontakte/icons.js';
 import CoverLoader from '../components/CoverLoader/CoverLoader.js';
 import SnippetDonation from '../components/SnippetDonation/SnippetDonation.js';
@@ -281,11 +281,18 @@ export class Creating extends React.Component {
       top: "\u041A\u0443\u0434\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u0442\u044C \u0434\u0435\u043D\u044C\u0433\u0438",
       placeholder: "\u0421\u0447\u0451\u0442",
       onClick: () => setPanel('vkpay')
-    }, donation.cashAccount.name)), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
+    }, donation.cashAccount.name)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: 68
+      }
+    }), /*#__PURE__*/React.createElement(FixedLayout, {
+      filled: true,
+      vertical: "bottom"
+    }, /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
       size: "l",
       stretched: true,
       onClick: () => setPanel('target2')
-    }, "\u0414\u0430\u043B\u0435\u0435"))), /*#__PURE__*/React.createElement(Panel, {
+    }, "\u0414\u0430\u043B\u0435\u0435")))), /*#__PURE__*/React.createElement(Panel, {
       id: "target2"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
       left: /*#__PURE__*/React.createElement(PanelHeaderBack, {
@@ -316,11 +323,18 @@ export class Creating extends React.Component {
       onClick: () => this.setState({
         activeModal: 'date'
       })
-    }, date && dateFormat(date))), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
+    }, date && dateFormat(date))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: 68
+      }
+    }), /*#__PURE__*/React.createElement(FixedLayout, {
+      filled: true,
+      vertical: "bottom"
+    }, /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
       size: "l",
       stretched: true,
       onClick: () => setPanel('posting')
-    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440"))), /*#__PURE__*/React.createElement(Panel, {
+    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440")))), /*#__PURE__*/React.createElement(Panel, {
       id: "regular"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
       separator: false,
@@ -381,11 +395,18 @@ export class Creating extends React.Component {
       top: "\u0410\u0432\u0442\u043E\u0440",
       placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0430\u0432\u0442\u043E\u0440\u0430",
       onClick: () => setPanel('author')
-    }, donation.author.name)), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
+    }, donation.author.name)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: 68
+      }
+    }), /*#__PURE__*/React.createElement(FixedLayout, {
+      filled: true,
+      vertical: "bottom"
+    }, /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
       size: "l",
       stretched: true,
       onClick: () => setPanel('posting')
-    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440"))), /*#__PURE__*/React.createElement(Panel, {
+    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440")))), /*#__PURE__*/React.createElement(Panel, {
       id: "author"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
       left: /*#__PURE__*/React.createElement(PanelHeaderBack, {
@@ -434,11 +455,18 @@ export class Creating extends React.Component {
           height: 140
         }
       })
-    }), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: 68
+      }
+    }), /*#__PURE__*/React.createElement(FixedLayout, {
+      filled: true,
+      vertical: "bottom"
+    }, /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
       size: "l",
       stretched: true,
       onClick: () => updateDonation(donation)
-    }, finishText || 'Опубликовать'))));
+    }, finishText || 'Опубликовать')))));
   }
 
 }
