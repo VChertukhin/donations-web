@@ -43,7 +43,8 @@ export class Newsfeed extends React.Component {
         }
       })
     }), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "xl",
+      size: "l",
+      stretched: true,
       onClick: () => setView('viewing')
     }, "\u0414\u0430\u043B\u0435\u0435"))));
   }

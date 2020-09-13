@@ -182,6 +182,7 @@ export class Creating extends React.Component {
       })
     }), /*#__PURE__*/React.createElement(Input, {
       type: "number",
+      pattern: "[0-9]*",
       top: "\u0421\u0443\u043C\u043C\u0430, \u20BD",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0441\u043E\u0431\u0440\u0430\u0442\u044C?",
       value: donation.need || undefined,
@@ -207,7 +208,8 @@ export class Creating extends React.Component {
       placeholder: "\u0421\u0447\u0451\u0442",
       onClick: () => setPanel('vkpay')
     }, donation.cashAccount.name)), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "xl",
+      size: "l",
+      stretched: true,
       onClick: () => setPanel('target2')
     }, "\u0414\u0430\u043B\u0435\u0435"))), /*#__PURE__*/React.createElement(Panel, {
       id: "target2"
@@ -224,13 +226,17 @@ export class Creating extends React.Component {
     }, /*#__PURE__*/React.createElement(Radio, {
       name: "type"
     }, "\u041A\u043E\u0433\u0434\u0430 \u0441\u043E\u0431\u0435\u0440\u0435\u043C \u0441\u0443\u043C\u043C\u0443"), /*#__PURE__*/React.createElement(Radio, {
+      style: {
+        marginTop: 0
+      },
       name: "type",
       defaultChecked: true
     }, "\u0412 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0443\u044E \u0434\u0430\u0442\u0443")), /*#__PURE__*/React.createElement(SelectMimicry, {
       top: "\u0414\u0430\u0442\u0430 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F",
       placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443"
     })), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "xl",
+      size: "l",
+      stretched: true,
       onClick: () => setPanel('posting')
     }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440"))), /*#__PURE__*/React.createElement(Panel, {
       id: "regular"
@@ -265,6 +271,7 @@ export class Creating extends React.Component {
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0421\u0443\u043C\u043C\u0430 \u0432 \u043C\u0435\u0441\u044F\u0446, \u20BD",
       type: "number",
+      pattern: "[0-9]*",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0432 \u043C\u0435\u0441\u044F\u0446?",
       value: donation.need || undefined,
       onChange: e => this.setDonation({
@@ -293,7 +300,8 @@ export class Creating extends React.Component {
       placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0430\u0432\u0442\u043E\u0440\u0430",
       onClick: () => setPanel('author')
     }, donation.author.name)), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "xl",
+      size: "l",
+      stretched: true,
       onClick: () => setPanel('posting')
     }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440"))), /*#__PURE__*/React.createElement(Panel, {
       id: "author"
@@ -316,6 +324,7 @@ export class Creating extends React.Component {
     }, "VK Pay"), /*#__PURE__*/React.createElement(Placeholder, {
       action: /*#__PURE__*/React.createElement(Button, {
         size: "l",
+        stretched: true,
         onClick: () => goBack()
       }, "\u041D\u0430\u0437\u0430\u0434"),
       stretched: true
@@ -344,7 +353,8 @@ export class Creating extends React.Component {
         }
       })
     }), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "xl",
+      size: "l",
+      stretched: true,
       onClick: () => updateDonation(donation)
     }, finishText || 'Опубликовать'))));
   }

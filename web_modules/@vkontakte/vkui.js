@@ -392,17 +392,24 @@ var OS;
 (function (OS) {
   OS["ANDROID"] = "android";
   OS["IOS"] = "ios";
+  OS["VKCOM"] = "vkcom";
 })(OS || (OS = {}));
 
 var ANDROID = OS.ANDROID;
 var IOS = OS.IOS;
+var VKCOM = OS.VKCOM;
 function platform(useragent) {
   var ua = useragent || canUseDOM && navigator.userAgent || '';
-  return /android/i.test(ua) ? ANDROID : IOS;
+  return /iphone|ipad|ipod/i.test(ua) ? IOS : ANDROID;
 }
 var osname = platform();
+/**
+ * @deprecated для определения платформы используйте withPlatform или usePlatform
+ */
 
-function getClassName(base) {
+var IS_PLATFORM_IOS = osname === IOS;
+
+function getClassname(base) {
   var osname = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : platform();
   return "".concat(base, " ").concat(base, "--").concat(osname);
 }
@@ -429,35 +436,244 @@ function _extends() {
 module.exports = _extends;
 });
 
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+var objectWithoutPropertiesLoose = _objectWithoutPropertiesLoose;
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+var objectWithoutProperties = _objectWithoutProperties;
+
 var SSRContext = /*#__PURE__*/react.createContext({
   platform: null,
   userAgent: ''
 });
 
+var Appearance;
+
+(function (Appearance) {
+  Appearance["DARK"] = "dark";
+  Appearance["LIGHT"] = "light";
+})(Appearance || (Appearance = {}));
+
+var Scheme;
+
+(function (Scheme) {
+  Scheme["DEPRECATED_CLIENT_LIGHT"] = "client_light";
+  Scheme["DEPRECATED_CLIENT_DARK"] = "client_dark";
+  Scheme["BRIGHT_LIGHT"] = "bright_light";
+  Scheme["SPACE_GRAY"] = "space_gray";
+})(Scheme || (Scheme = {}));
+
+var WebviewType;
+
+(function (WebviewType) {
+  WebviewType["VKAPPS"] = "vkapps";
+  WebviewType["INTERNAL"] = "internal";
+})(WebviewType || (WebviewType = {}));
+
+var defaultConfigProviderProps = {
+  webviewType: WebviewType.VKAPPS,
+  isWebView: bridge.isWebView(),
+  scheme: Scheme.BRIGHT_LIGHT,
+  appearance: Appearance.LIGHT,
+  transitionMotionEnabled: true,
+  platform: platform()
+};
+var ConfigProviderContext = /*#__PURE__*/react.createContext(defaultConfigProviderProps);
+
 function withPlatform(Component) {
   function WithPlatform(props) {
-    var ssrContext = react.useContext(SSRContext); // @ts-ignore
+    var ssrContext = react.useContext(SSRContext);
+
+    var _React$useContext = react.useContext(ConfigProviderContext),
+        platform = _React$useContext.platform; // @ts-ignore
+
 
     return /*#__PURE__*/react.createElement(Component, _extends_1({}, props, {
-      platform: ssrContext.platform || platform()
+      platform: ssrContext.platform || platform
     }));
   }
 
   return WithPlatform;
 }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+var SizeType;
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+(function (SizeType) {
+  SizeType["COMPACT"] = "compact";
+  SizeType["REGULAR"] = "regular";
+})(SizeType || (SizeType = {}));
+
+var ViewWidth;
+
+(function (ViewWidth) {
+  ViewWidth[ViewWidth["SMALL_MOBILE"] = 1] = "SMALL_MOBILE";
+  ViewWidth[ViewWidth["MOBILE"] = 2] = "MOBILE";
+  ViewWidth[ViewWidth["SMALL_TABLET"] = 3] = "SMALL_TABLET";
+  ViewWidth[ViewWidth["TABLET"] = 4] = "TABLET";
+  ViewWidth[ViewWidth["DESKTOP"] = 5] = "DESKTOP";
+})(ViewWidth || (ViewWidth = {}));
+
+var AdaptivityContext = /*#__PURE__*/react.createContext({
+  sizeX: SizeType.COMPACT,
+  sizeY: SizeType.REGULAR
+});
+
+function withAdaptivity(TargetComponent, config) {
+  function AdaptivityConsumer(props) {
+    var context = react.useContext(AdaptivityContext);
+    var update = false;
+
+    if (props.sizeX || props.sizeY) {
+      update = true;
+    }
+
+    var sizeX = props.sizeX || context.sizeX;
+    var sizeY = props.sizeY || context.sizeY;
+    var viewWidth = context.viewWidth;
+    var adaptivityProps = {};
+    config.sizeX ? adaptivityProps.sizeX = sizeX : undefined;
+    config.sizeY ? adaptivityProps.sizeY = sizeY : undefined;
+    config.viewWidth ? adaptivityProps.viewWidth = viewWidth : undefined; // @ts-ignore
+
+    var target = /*#__PURE__*/react.createElement(TargetComponent, _extends_1({}, props, adaptivityProps));
+
+    if (update) {
+      return /*#__PURE__*/react.createElement(AdaptivityContext.Provider, {
+        value: {
+          sizeX: sizeX,
+          sizeY: sizeY,
+          viewWidth: viewWidth
+        }
+      }, target);
+    }
+
+    return target;
+  }
+
+  return AdaptivityConsumer;
+}
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+var SplitContext = /*#__PURE__*/react.createContext({
+  colRef: null,
+  animate: true
+});
+var SplitCol = /*#__PURE__*/function (_Component2) {
+  inherits(SplitCol, _Component2);
+
+  var _super2 = _createSuper(SplitCol);
+
+  function SplitCol() {
+    var _this;
+
+    classCallCheck(this, SplitCol);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _super2.call.apply(_super2, [this].concat(args));
+
+    defineProperty(assertThisInitialized(_this), "baseRef", /*#__PURE__*/react.createRef());
+
+    return _this;
+  }
+
+  createClass(SplitCol, [{
+    key: "getContext",
+    value: function getContext() {
+      return {
+        colRef: this.baseRef,
+        animate: this.props.animate
+      };
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props2 = this.props,
+          children = _this$props2.children,
+          width = _this$props2.width,
+          maxWidth = _this$props2.maxWidth,
+          minWidth = _this$props2.minWidth,
+          spaced = _this$props2.spaced;
+      return /*#__PURE__*/react.createElement("div", {
+        style: {
+          width: width,
+          maxWidth: maxWidth,
+          minWidth: minWidth,
+          margin: spaced ? '0 16px' : null
+        },
+        ref: this.baseRef,
+        className: "SplitLayout__col"
+      }, /*#__PURE__*/react.createElement(SplitContext.Provider, {
+        value: this.getContext()
+      }, children));
+    }
+  }]);
+
+  return SplitCol;
+}(react.Component);
+
+defineProperty(SplitCol, "defaultProps", {
+  animate: false
+});
+
+function withContext(Component, Ctx, prop) {
+  function WithContext(props) {
+    var context = react.useContext(Ctx); // @ts-ignore
+
+    return /*#__PURE__*/react.createElement(Component, _extends_1({}, props, defineProperty({}, prop, context)));
+  }
+
+  return WithContext;
+}
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _createSuper$1(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$1(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$1() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var Root = /*#__PURE__*/function (_Component) {
   inherits(Root, _Component);
 
-  var _super = _createSuper(Root);
+  var _super = _createSuper$1(Root);
 
   function Root(props) {
     var _this;
@@ -551,7 +767,7 @@ var Root = /*#__PURE__*/function (_Component) {
   }, {
     key: "shouldDisableTransitionMotion",
     value: function shouldDisableTransitionMotion() {
-      return this.context.transitionMotionEnabled === false;
+      return this.props.configProvider.transitionMotionEnabled === false || !this.props.splitCol.animate;
     }
   }, {
     key: "waitAnimationFinish",
@@ -591,7 +807,7 @@ var Root = /*#__PURE__*/function (_Component) {
       var Views = this.arrayChildren.filter(function (view) {
         return _this3.state.visibleViews.includes(view.props.id);
       });
-      var baseClassName = getClassName('Root', platform);
+      var baseClassName = getClassname('Root', platform);
       return /*#__PURE__*/react.createElement("div", {
         className: classNames(baseClassName, this.props.className, {
           'Root--transition': transition,
@@ -641,11 +857,10 @@ defineProperty(Root, "defaultProps", {
 
 defineProperty(Root, "contextTypes", {
   window: propTypes.any,
-  document: propTypes.any,
-  transitionMotionEnabled: propTypes.bool
+  document: propTypes.any
 });
 
-var Root$1 = withPlatform(Root);
+var Root$1 = withContext(withContext(withPlatform(Root), SplitContext, 'splitCol'), ConfigProviderContext, 'configProvider');
 
 /**
  * Функция для js анимации
@@ -680,52 +895,14 @@ function animate(_ref) {
   });
 }
 
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
-}
-
-var objectWithoutPropertiesLoose = _objectWithoutPropertiesLoose;
-
-function _objectWithoutProperties(source, excluded) {
-  if (source == null) return {};
-  var target = objectWithoutPropertiesLoose(source, excluded);
-  var key, i;
-
-  if (Object.getOwnPropertySymbols) {
-    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-
-    for (i = 0; i < sourceSymbolKeys.length; i++) {
-      key = sourceSymbolKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-      target[key] = source[key];
-    }
-  }
-
-  return target;
-}
-
-var objectWithoutProperties = _objectWithoutProperties;
-
 /*
- * Получает координату по оси абсцисс из touch- или mouse-события
+ * Получает кординату по оси абсцисс из touch- или mouse-события
  */
 var coordX = function coordX(e) {
   return e.clientX || e.changedTouches && e.changedTouches[0].clientX;
 };
 /*
- * Получает координату по оси ординат из touch- или mouse-события
+ * Получает кординату по оси ординат из touch- или mouse-события
  */
 
 
@@ -749,19 +926,47 @@ function getSupportedEvents() {
   return ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 }
 
+// Является ли переданное значение числовым
+function hasReactNode(value) {
+  return value !== undefined && value !== false && value !== null;
+}
+function setRef(element, ref) {
+  if (ref) {
+    if (typeof ref === 'function') {
+      ref(element);
+    } else {
+      ref.current = element;
+    }
+  }
+} // eslint-disable-next-line
+function createCustomEvent(window, type, eventInitDict) {
+  if (typeof window.CustomEvent !== 'function') {
+    var options = eventInitDict || {
+      bubbles: false,
+      cancelable: false,
+      detail: null
+    };
+    var evt = document.createEvent('CustomEvent');
+    evt.initCustomEvent(type, options.bubbles, options.cancelable, options.detail);
+    return evt;
+  }
+
+  return new window.CustomEvent(type, eventInitDict);
+}
+
 function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _createSuper$1(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$1(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$2(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$2(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$1() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$2() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 var events = getSupportedEvents();
 
 var Touch = /*#__PURE__*/function (_Component) {
   inherits(Touch, _Component);
 
-  var _super = _createSuper$1(Touch);
+  var _super = _createSuper$2(Touch);
 
   function Touch(props) {
     var _this;
@@ -775,6 +980,18 @@ var Touch = /*#__PURE__*/function (_Component) {
     defineProperty(assertThisInitialized(_this), "gesture", {});
 
     defineProperty(assertThisInitialized(_this), "container", void 0);
+
+    defineProperty(assertThisInitialized(_this), "onEnter", function (e) {
+      if (_this.props.onEnter) {
+        _this.props.onEnter(e);
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "onLeave", function (e) {
+      if (_this.props.onLeave) {
+        _this.props.onLeave(e);
+      }
+    });
 
     defineProperty(assertThisInitialized(_this), "onStart", function (e) {
       _this.gesture = {
@@ -890,7 +1107,12 @@ var Touch = /*#__PURE__*/function (_Component) {
       var target = e.target; // Если закончили жест на ссылке, выставляем флаг для отмены перехода
 
       _this.cancelClick = target.tagName === 'A' && isSlide;
-      _this.gesture = {};
+      _this.gesture = {}; // Если это был тач-евент, симулируем отмену hover
+
+      if (e.type === 'touchend' || e.type === 'touchcancel') {
+        _this.onLeave(e);
+      }
+
       !touchEnabled && _this.unsubscribe(_this.document);
     });
 
@@ -913,15 +1135,7 @@ var Touch = /*#__PURE__*/function (_Component) {
 
     defineProperty(assertThisInitialized(_this), "getRef", function (container) {
       _this.container = container;
-      var getRootRef = _this.props.getRootRef;
-
-      if (getRootRef) {
-        if (typeof getRootRef === 'function') {
-          getRootRef(container);
-        } else {
-          getRootRef.current = container;
-        }
-      }
+      setRef(container, _this.props.getRootRef);
     });
 
     _this.cancelClick = false;
@@ -937,6 +1151,14 @@ var Touch = /*#__PURE__*/function (_Component) {
           passive: false
         });
         touchEnabled && this.subscribe(this.container);
+        this.container.addEventListener('mouseenter', this.onEnter, {
+          capture: this.props.useCapture,
+          passive: true
+        });
+        this.container.addEventListener('mouseleave', this.onLeave, {
+          capture: this.props.useCapture,
+          passive: true
+        });
       }
     }
   }, {
@@ -944,9 +1166,11 @@ var Touch = /*#__PURE__*/function (_Component) {
     value: function componentWillUnmount() {
       this.container.removeEventListener(events[0], this.onStart);
       touchEnabled && this.unsubscribe(this.container);
+      this.container.removeEventListener('mouseenter', this.onEnter);
+      this.container.removeEventListener('mouseleave', this.onLeave);
     }
     /**
-     * Обработчик событий touchstart
+     * Обработчик событий mouseenter
      *
      * @param {Object} e Браузерное событие
      * @return {void}
@@ -995,13 +1219,15 @@ var Touch = /*#__PURE__*/function (_Component) {
           onMove = _this$props.onMove,
           onMoveX = _this$props.onMoveX,
           onMoveY = _this$props.onMoveY,
+          onLeave = _this$props.onLeave,
+          onEnter = _this$props.onEnter,
           onEnd = _this$props.onEnd,
           onEndX = _this$props.onEndX,
           onEndY = _this$props.onEndY,
           useCapture = _this$props.useCapture,
           Component = _this$props.Component,
           getRootRef = _this$props.getRootRef,
-          restProps = objectWithoutProperties(_this$props, ["onStart", "onStartX", "onStartY", "onMove", "onMoveX", "onMoveY", "onEnd", "onEndX", "onEndY", "useCapture", "Component", "getRootRef"]);
+          restProps = objectWithoutProperties(_this$props, ["onStart", "onStartX", "onStartY", "onMove", "onMoveX", "onMoveY", "onLeave", "onEnter", "onEnd", "onEndX", "onEndY", "useCapture", "Component", "getRootRef"]);
 
       return /*#__PURE__*/react.createElement(Component, _extends_1({}, restProps, {
         onDragStart: this.onDragStart,
@@ -1048,9 +1274,9 @@ function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if 
 
 function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _createSuper$2(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$2(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$2() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 var transitionStartEventName = 'VKUI:View:transition-start';
 var transitionEndEventName = 'VKUI:View:transition-end';
 var SwipeBackResults;
@@ -1066,7 +1292,7 @@ var swipeBackExcludedTags = ['input', 'textarea'];
 var View = /*#__PURE__*/function (_Component) {
   inherits(View, _Component);
 
-  var _super = _createSuper$2(View);
+  var _super = _createSuper$3(View);
 
   function View(props) {
     var _this;
@@ -1085,7 +1311,7 @@ var View = /*#__PURE__*/function (_Component) {
         var isBack = _this.state.isBack;
         var prevPanel = _this.state.prevPanel;
 
-        _this.document.dispatchEvent(new _this.window.CustomEvent(transitionEndEventName));
+        _this.document.dispatchEvent(createCustomEvent(_this.window, transitionEndEventName));
 
         _this.setState({
           prevPanel: null,
@@ -1151,15 +1377,17 @@ var View = /*#__PURE__*/function (_Component) {
         return;
       }
 
-      var platform = _this.props.platform;
+      var _this$props = _this.props,
+          platform = _this$props.platform,
+          configProvider = _this$props.configProvider;
 
-      if (platform === IOS && !_this.context.isWebView && (e.startX <= 70 || e.startX >= _this.window.innerWidth - 70) && !_this.state.browserSwipe) {
+      if (platform === IOS && !configProvider.isWebView && (e.startX <= 70 || e.startX >= _this.window.innerWidth - 70) && !_this.state.browserSwipe) {
         _this.setState({
           browserSwipe: true
         });
       }
 
-      if (platform === IOS && _this.context.isWebView && _this.props.onSwipeBack) {
+      if (platform === IOS && configProvider.isWebView && _this.props.onSwipeBack) {
         if (_this.state.animated && e.startX <= 70) {
           return;
         }
@@ -1279,7 +1507,7 @@ var View = /*#__PURE__*/function (_Component) {
           visiblePanels: [nextPanel],
           scrolls: removeObjectKeys(prevState.scrolls, [prevState.swipeBackPrevPanel])
         }, function () {
-          _this2.document.dispatchEvent(new _this2.window.CustomEvent(transitionEndEventName));
+          _this2.document.dispatchEvent(createCustomEvent(_this2.window, transitionEndEventName));
 
           window.scrollTo(0, prevState.scrolls[_this2.state.activePanel]);
           prevProps.onTransition && prevProps.onTransition({
@@ -1293,7 +1521,7 @@ var View = /*#__PURE__*/function (_Component) {
       var scrolls = this.state.scrolls; // Начался переход
 
       if (!prevState.animated && this.state.animated) {
-        this.document.dispatchEvent(new this.window.CustomEvent(transitionStartEventName, {
+        this.document.dispatchEvent(createCustomEvent(this.window, transitionStartEventName, {
           detail: {
             scrolls: scrolls
           }
@@ -1311,7 +1539,7 @@ var View = /*#__PURE__*/function (_Component) {
 
 
       if (!prevState.swipingBack && this.state.swipingBack) {
-        this.document.dispatchEvent(new this.window.CustomEvent(transitionStartEventName, {
+        this.document.dispatchEvent(createCustomEvent(this.window, transitionStartEventName, {
           detail: {
             scrolls: scrolls
           }
@@ -1351,7 +1579,7 @@ var View = /*#__PURE__*/function (_Component) {
   }, {
     key: "shouldDisableTransitionMotion",
     value: function shouldDisableTransitionMotion() {
-      return this.context.transitionMotionEnabled === false;
+      return this.props.configProvider.transitionMotionEnabled === false || !this.props.splitCol.animate;
     }
   }, {
     key: "waitTransitionFinish",
@@ -1410,7 +1638,7 @@ var View = /*#__PURE__*/function (_Component) {
         swipebackStartX: 0,
         swipeBackShift: 0
       }, function () {
-        _this3.document.dispatchEvent(new _this3.window.CustomEvent(transitionEndEventName));
+        _this3.document.dispatchEvent(createCustomEvent(_this3.window, transitionEndEventName));
       });
     }
   }, {
@@ -1455,11 +1683,11 @@ var View = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this4 = this;
 
-      var _this$props = this.props,
-          style = _this$props.style,
-          popout = _this$props.popout,
-          modal = _this$props.modal,
-          platform = _this$props.platform;
+      var _this$props2 = this.props,
+          style = _this$props2.style,
+          popout = _this$props2.popout,
+          modal = _this$props2.modal,
+          platform = _this$props2.platform;
       var _this$state = this.state,
           prevPanel = _this$state.prevPanel,
           nextPanel = _this$state.nextPanel,
@@ -1480,7 +1708,7 @@ var View = /*#__PURE__*/function (_Component) {
       };
       return /*#__PURE__*/react.createElement(Touch, {
         Component: "section",
-        className: classNames(getClassName('View', platform), this.props.className, modifiers),
+        className: classNames(getClassname('View', platform), this.props.className, modifiers),
         style: style,
         onMoveX: this.onMoveX,
         onEnd: this.onEnd
@@ -1534,251 +1762,66 @@ defineProperty(View, "defaultProps", {
 });
 
 defineProperty(View, "contextTypes", {
-  isWebView: propTypes.bool,
   window: propTypes.any,
-  document: propTypes.any,
-  transitionMotionEnabled: propTypes.bool
+  document: propTypes.any
 });
 
-var View$1 = withPlatform(View);
-
-var tabbarHeight = 48;
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-var arrayWithHoles = _arrayWithHoles;
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-var iterableToArrayLimit = _iterableToArrayLimit;
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-var arrayLikeToArray = _arrayLikeToArray;
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-var unsupportedIterableToArray = _unsupportedIterableToArray;
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-var nonIterableRest = _nonIterableRest;
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-var slicedToArray = _slicedToArray;
-
-function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$4(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-var initialState = {
-  bottom: null,
-  top: null,
-  left: null,
-  right: null
-};
-
-function resolveInsets(e) {
-  var _e$detail = e.detail,
-      type = _e$detail.type,
-      data = _e$detail.data;
-
-  switch (type) {
-    case 'VKWebAppUpdateConfig':
-    case 'VKWebAppUpdateInsets':
-      // Устаревшее событие vk-bridge
-      var insets = data.insets;
-
-      if (insets) {
-        return _objectSpread$4(_objectSpread$4({}, insets), {}, {
-          bottom: insets.bottom > 150 ? 0 : insets.bottom // если больше 150 – значит открылась клава и она сама работает как инсет, то есть наш нужно занулить
-
-        });
-      }
-
-  }
-
-  return null;
-}
-
-bridge.subscribe(function (e) {
-  var insets = resolveInsets(e);
-
-  if (insets) {
-    var htmlElement = window.document.documentElement;
-
-    for (var key in insets) {
-      if (insets.hasOwnProperty(key) && insets[key] > 0) {
-        htmlElement.style.setProperty("--safe-area-inset-".concat(key), "".concat(insets[key], "px"));
-      }
-    }
-
-    initialState = insets;
-  }
-});
-function useInsets() {
-  var _useState = react.useState(initialState),
-      _useState2 = slicedToArray(_useState, 2),
-      insets = _useState2[0],
-      setInsets = _useState2[1];
-
-  react.useEffect(function () {
-    function connectListener(e) {
-      var insets = resolveInsets(e);
-
-      if (insets) {
-        setInsets(insets);
-      }
-    }
-
-    bridge.subscribe(connectListener);
-    return function () {
-      bridge.unsubscribe(connectListener);
-    };
-  }, []);
-  return insets;
-}
-
-function withInsets(Component) {
-  function WithInsets(props) {
-    var insets = useInsets(); // @ts-ignore
-
-    return /*#__PURE__*/react.createElement(Component, _extends_1({}, props, {
-      insets: insets
-    }));
-  }
-
-  return WithInsets;
-}
-
-// Является ли переданное значение числовым
-function isNumeric(value) {
-  return !isNaN(parseFloat(value)) && isFinite(value);
-} // Является ли переданное значение функцией
-function hasReactNode(value) {
-  return value !== undefined && value !== false && value !== null;
-}
+var View$1 = withContext(withContext(withPlatform(View), SplitContext, 'splitCol'), ConfigProviderContext, 'configProvider');
 
 var PanelContext = /*#__PURE__*/react.createContext({});
 
-function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var Panel = /*#__PURE__*/function (_Component) {
   inherits(Panel, _Component);
 
-  var _super = _createSuper$3(Panel);
+  var _super = _createSuper$4(Panel);
 
-  function Panel() {
+  function Panel(props) {
     var _this;
 
     classCallCheck(this, Panel);
 
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
+    _this = _super.call(this, props);
 
-    _this = _super.call.apply(_super, [this].concat(args));
+    defineProperty(assertThisInitialized(_this), "childContext", void 0);
 
     defineProperty(assertThisInitialized(_this), "container", void 0);
 
     defineProperty(assertThisInitialized(_this), "getRef", function (container) {
       _this.container = container;
-      var getRootRef = _this.props.getRootRef;
-
-      if (getRootRef) {
-        if (typeof getRootRef === 'function') {
-          getRootRef(container);
-        } else {
-          getRootRef.current = container;
-        }
-      }
+      setRef(container, _this.props.getRootRef);
     });
 
+    _this.childContext = {
+      panel: props.id
+    };
     return _this;
   }
 
   createClass(Panel, [{
-    key: "getContext",
-    value: function getContext() {
-      return {
-        panel: this.props.id,
-        separator: this.props.separator
-      };
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this$props = this.props,
           className = _this$props.className,
           centered = _this$props.centered,
           children = _this$props.children,
-          insets = _this$props.insets,
           platform = _this$props.platform,
-          separator = _this$props.separator,
           getRootRef = _this$props.getRootRef,
-          restProps = objectWithoutProperties(_this$props, ["className", "centered", "children", "insets", "platform", "separator", "getRootRef"]);
+          sizeX = _this$props.sizeX,
+          restProps = objectWithoutProperties(_this$props, ["className", "centered", "children", "platform", "getRootRef", "sizeX"]);
 
-      var tabbarPadding = this.context.hasTabbar ? tabbarHeight : 0;
       return /*#__PURE__*/react.createElement(PanelContext.Provider, {
-        value: this.getContext()
+        value: this.childContext
       }, /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
         ref: this.getRef,
-        className: classNames(getClassName('Panel', platform), className, {
+        className: classNames(getClassname('Panel', platform), className, "Panel--".concat(sizeX), defineProperty({
           'Panel--centered': centered
-        })
+        }, "Panel--sizeX-".concat(sizeX), true))
       }), /*#__PURE__*/react.createElement(Touch, {
-        className: "Panel__in",
-        style: {
-          paddingBottom: isNumeric(insets.bottom) ? insets.bottom + tabbarPadding : null
-        }
+        className: "Panel__in"
       }, platform === IOS && /*#__PURE__*/react.createElement("div", {
         className: "Panel__fade"
       }), /*#__PURE__*/react.createElement("div", {
@@ -1796,19 +1839,12 @@ var Panel = /*#__PURE__*/function (_Component) {
 
 defineProperty(Panel, "defaultProps", {
   children: '',
-  centered: false,
-
-  /**
-   * @deprecated будет удалено в 4-й версии. Сепаратор теперь устанавливается в PanelHeader
-   */
-  separator: true
+  centered: false
 });
 
-defineProperty(Panel, "contextTypes", {
-  hasTabbar: propTypes.bool
+var Panel$1 = withAdaptivity(withPlatform(Panel), {
+  sizeX: true
 });
-
-var Panel$1 = withPlatform(withInsets(Panel));
 
 /**
  * Контекст для компонентов, использующих Touch в качестве корневой обёртки,
@@ -1827,13 +1863,33 @@ function getOffsetRect(elem) {
   };
 }
 
-function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+var hasMouse;
+var hasTouchEvents;
+var hasHover;
 
-function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$5(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+if (IS_PLATFORM_IOS) {
+  hasMouse = false;
+  hasHover = false;
+  hasTouchEvents = true;
+} else {
+  hasTouchEvents = 'ontouchstart' in document;
 
-function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+  if (hasTouchEvents) {
+    hasMouse = window.matchMedia && matchMedia('(any-pointer)').matches ? matchMedia('(any-pointer: fine)').matches : /android|mobile|tablet/i.test(navigator.userAgent);
+    hasHover = hasMouse && (window.matchMedia && matchMedia('(hover)').matches ? matchMedia('(hover: hover)').matches : false);
+  } else {
+    hasMouse = true;
+    hasHover = true;
+  }
+}
 
-function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$4(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var ts = function ts() {
   return +Date.now();
@@ -1860,7 +1916,7 @@ function deactivateOtherInstances(exclude) {
 var Tappable = /*#__PURE__*/function (_Component) {
   inherits(Tappable, _Component);
 
-  var _super = _createSuper$4(Tappable);
+  var _super = _createSuper$5(Tappable);
 
   function Tappable(props) {
     var _this;
@@ -1969,7 +2025,7 @@ var Tappable = /*#__PURE__*/function (_Component) {
 
         _this.setState(function (state) {
           return {
-            clicks: _objectSpread$5(_objectSpread$5({}, state.clicks), {}, defineProperty({}, key, {
+            clicks: _objectSpread$4(_objectSpread$4({}, state.clicks), {}, defineProperty({}, key, {
               x: x,
               y: y
             }))
@@ -1978,7 +2034,7 @@ var Tappable = /*#__PURE__*/function (_Component) {
 
         _this.wavesTimeout = window.setTimeout(function () {
           _this.setState(function (state) {
-            var clicks = _objectSpread$5({}, state.clicks);
+            var clicks = _objectSpread$4({}, state.clicks);
 
             delete clicks[key];
             return {
@@ -1987,6 +2043,18 @@ var Tappable = /*#__PURE__*/function (_Component) {
           });
         }, 225);
       }
+    });
+
+    defineProperty(assertThisInitialized(_this), "onEnter", function () {
+      _this.setState({
+        hovered: true
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "onLeave", function () {
+      _this.setState({
+        hovered: false
+      });
     });
 
     defineProperty(assertThisInitialized(_this), "start", function () {
@@ -2020,15 +2088,23 @@ var Tappable = /*#__PURE__*/function (_Component) {
 
     defineProperty(assertThisInitialized(_this), "getRef", function (container) {
       _this.container = container;
-      var getRootRef = _this.props.getRootRef;
+      setRef(container, _this.props.getRootRef);
+    });
 
-      if (getRootRef) {
-        if (typeof getRootRef === 'function') {
-          getRootRef(container);
-        } else {
-          getRootRef.current = container;
-        }
+    defineProperty(assertThisInitialized(_this), "containerHasTransparentBackground", function () {
+      if (!_this.container) {
+        return true;
       }
+
+      if (!_this.container.style.backgroundColor) {
+        return true;
+      }
+
+      if (_this.container.style.backgroundColor === 'transparent') {
+        return true;
+      }
+
+      return false;
     });
 
     _this.id = Math.round(Math.random() * 1e8).toString(16);
@@ -2059,7 +2135,8 @@ var Tappable = /*#__PURE__*/function (_Component) {
 
       var _this$state = this.state,
           clicks = _this$state.clicks,
-          active = _this$state.active;
+          active = _this$state.active,
+          hovered = _this$state.hovered;
 
       var _this$props = this.props,
           children = _this$props.children,
@@ -2071,11 +2148,12 @@ var Tappable = /*#__PURE__*/function (_Component) {
           platform = _this$props.platform,
           restProps = objectWithoutProperties(_this$props, ["children", "className", "Component", "activeEffectDelay", "stopPropagation", "getRootRef", "platform"]);
 
-      var classes = classNames(getClassName('Tappable', platform), className, {
+      var hoverClassModificator = this.containerHasTransparentBackground() ? 'shadowHovered' : 'opacityHovered';
+      var classes = classNames(getClassname('Tappable', platform), className, defineProperty({
         'Tappable--active': active,
         'Tappable--inactive': !active
-      });
-      var RootComponent = !restProps.disabled ? Touch : Component;
+      }, "Tappable--".concat(hoverClassModificator), hasHover && hovered));
+      var RootComponent = restProps.disabled ? Component : Touch;
       var props = {};
 
       if (!restProps.disabled) {
@@ -2085,6 +2163,8 @@ var Tappable = /*#__PURE__*/function (_Component) {
         props.onStart = this.onStart;
         props.onMove = this.onMove;
         props.onEnd = this.onEnd;
+        props.onEnter = this.onEnter;
+        props.onLeave = this.onLeave;
         /* eslint-enable */
 
         props.getRootRef = this.getRef;
@@ -2096,7 +2176,7 @@ var Tappable = /*#__PURE__*/function (_Component) {
         _this2.insideTouchRoot = insideTouchRoot;
         return /*#__PURE__*/react.createElement(RootComponent, _extends_1({}, restProps, {
           className: classes
-        }, props), platform === ANDROID && /*#__PURE__*/react.createElement("span", {
+        }, props), children, platform === ANDROID && /*#__PURE__*/react.createElement("span", {
           className: "Tappable__waves"
         }, Object.keys(clicks).map(function (k) {
           return /*#__PURE__*/react.createElement("span", {
@@ -2107,7 +2187,9 @@ var Tappable = /*#__PURE__*/function (_Component) {
             },
             key: k
           });
-        })), children);
+        })), hasHover && /*#__PURE__*/react.createElement("span", {
+          className: "Tappable__hoverShadow"
+        }));
       });
     }
   }]);
@@ -2127,7 +2209,11 @@ var Tappable$1 = withPlatform(Tappable);
 
 function usePlatform() {
   var ssrContext = react.useContext(SSRContext);
-  return ssrContext.platform || platform();
+
+  var _useContext = react.useContext(ConfigProviderContext),
+      platform = _useContext.platform;
+
+  return ssrContext.platform || platform;
 }
 
 var PanelHeaderButton = function PanelHeaderButton(_ref) {
@@ -2143,7 +2229,7 @@ var PanelHeaderButton = function PanelHeaderButton(_ref) {
   return /*#__PURE__*/react.createElement(Tappable$1, _extends_1({}, restProps, {
     Component: Component,
     activeEffectDelay: 200,
-    className: classNames(getClassName('PanelHeaderButton', platform), className, {
+    className: classNames(getClassname('PanelHeaderButton', platform), className, {
       'PanelHeaderButton--primary': primary,
       'PanelHeaderButton--primitive': isPrimitive
     })
@@ -2157,31 +2243,29 @@ PanelHeaderButton.defaultProps = {
 function withPanelContext(Component) {
   function WithPanelContext(props) {
     var _useContext = react.useContext(PanelContext),
-        panel = _useContext.panel,
-        separator = _useContext.separator; // @ts-ignore
+        panel = _useContext.panel; // @ts-ignore
 
 
     return /*#__PURE__*/react.createElement(Component, _extends_1({}, props, {
-      panel: panel,
-      separator: separator
+      panel: panel
     }));
   }
 
   return WithPanelContext;
 }
 
-function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$5(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$6(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$6(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$6() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var FixedLayout = /*#__PURE__*/function (_React$Component) {
   inherits(FixedLayout, _React$Component);
 
-  var _super = _createSuper$5(FixedLayout);
+  var _super = _createSuper$6(FixedLayout);
 
   function FixedLayout() {
     var _this;
@@ -2195,18 +2279,22 @@ var FixedLayout = /*#__PURE__*/function (_React$Component) {
     _this = _super.call.apply(_super, [this].concat(args));
 
     defineProperty(assertThisInitialized(_this), "state", {
-      position: null,
-      top: null
+      position: 'absolute',
+      top: null,
+      width: ''
     });
 
     defineProperty(assertThisInitialized(_this), "el", void 0);
+
+    defineProperty(assertThisInitialized(_this), "onMountResizeTimeout", void 0);
 
     defineProperty(assertThisInitialized(_this), "onViewTransitionStart", function (e) {
       var panelScroll = e.detail.scrolls[_this.props.panel] || 0;
 
       _this.setState({
         position: 'absolute',
-        top: _this.el.offsetTop + panelScroll
+        top: _this.el.offsetTop + panelScroll,
+        width: ''
       });
     });
 
@@ -2215,19 +2303,32 @@ var FixedLayout = /*#__PURE__*/function (_React$Component) {
         position: null,
         top: null
       });
+
+      _this.doResize();
+    });
+
+    defineProperty(assertThisInitialized(_this), "doResize", function () {
+      var colRef = _this.props.splitCol.colRef;
+
+      if (colRef && colRef.current) {
+        var node = colRef.current;
+        var width = node.offsetWidth;
+
+        _this.setState({
+          width: "".concat(width, "px"),
+          position: null
+        });
+      } else {
+        _this.setState({
+          width: '',
+          position: null
+        });
+      }
     });
 
     defineProperty(assertThisInitialized(_this), "getRef", function (element) {
       _this.el = element;
-      var getRootRef = _this.props.getRootRef;
-
-      if (getRootRef) {
-        if (typeof getRootRef === 'function') {
-          getRootRef(element);
-        } else {
-          getRootRef.current = element;
-        }
-      }
+      setRef(element, _this.props.getRootRef);
     });
 
     return _this;
@@ -2236,12 +2337,20 @@ var FixedLayout = /*#__PURE__*/function (_React$Component) {
   createClass(FixedLayout, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this2 = this;
+
+      this.onMountResizeTimeout = setTimeout(function () {
+        return _this2.doResize();
+      });
+      window.addEventListener('resize', this.doResize);
       this.document.addEventListener(transitionStartEventName, this.onViewTransitionStart);
       this.document.addEventListener(transitionEndEventName, this.onViewTransitionEnd);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
+      clearInterval(this.onMountResizeTimeout);
+      window.removeEventListener('resize', this.doResize);
       this.document.removeEventListener(transitionStartEventName, this.onViewTransitionStart);
       this.document.removeEventListener(transitionEndEventName, this.onViewTransitionEnd);
     }
@@ -2254,22 +2363,18 @@ var FixedLayout = /*#__PURE__*/function (_React$Component) {
           style = _this$props.style,
           vertical = _this$props.vertical,
           getRootRef = _this$props.getRootRef,
-          insets = _this$props.insets,
           platform = _this$props.platform,
           filled = _this$props.filled,
-          separator = _this$props.separator,
-          restProps = objectWithoutProperties(_this$props, ["className", "children", "style", "vertical", "getRootRef", "insets", "platform", "filled", "separator"]);
+          splitCol = _this$props.splitCol,
+          panel = _this$props.panel,
+          restProps = objectWithoutProperties(_this$props, ["className", "children", "style", "vertical", "getRootRef", "platform", "filled", "splitCol", "panel"]);
 
-      var tabbarPadding = this.context.hasTabbar ? tabbarHeight : 0;
-      var paddingBottom = vertical === 'bottom' && isNumeric(insets.bottom) ? insets.bottom + tabbarPadding : null;
       return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
         ref: this.getRef,
-        className: classNames(getClassName('FixedLayout', platform), {
+        className: classNames(getClassname('FixedLayout', platform), {
           'FixedLayout--filled': filled
         }, "FixedLayout--".concat(vertical), className),
-        style: _objectSpread$6(_objectSpread$6(_objectSpread$6({}, style), this.state), {}, {
-          paddingBottom: paddingBottom
-        })
+        style: _objectSpread$5(_objectSpread$5({}, style), this.state)
       }), /*#__PURE__*/react.createElement("div", {
         className: "FixedLayout__in"
       }, children));
@@ -2285,53 +2390,30 @@ var FixedLayout = /*#__PURE__*/function (_React$Component) {
 }(react.Component);
 
 defineProperty(FixedLayout, "contextTypes", {
-  document: propTypes.any,
-  hasTabbar: propTypes.bool
+  document: propTypes.any
 });
 
-var FixedLayout$1 = withPlatform(withInsets(withPanelContext(FixedLayout)));
+var FixedLayout$1 = withContext(withPlatform(withPanelContext(FixedLayout)), SplitContext, 'splitCol');
 
 var Separator = function Separator(_ref) {
   var className = _ref.className,
       wide = _ref.wide,
-      restProps = objectWithoutProperties(_ref, ["className", "wide"]);
+      expanded = _ref.expanded,
+      restProps = objectWithoutProperties(_ref, ["className", "wide", "expanded"]);
 
   var platform = usePlatform();
   return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
-    className: classNames(getClassName('Separator', platform), className, {
+    className: classNames(getClassname('Separator', platform), className, {
       'Separator--wide': wide
     })
   }), /*#__PURE__*/react.createElement("div", {
-    className: "Separator__in"
+    className: classNames('Separator__in', {
+      'Separator__in--expanded': expanded
+    })
   }));
 };
 
 var Separator$1 = /*#__PURE__*/react.memo(Separator);
-
-var Appearance;
-
-(function (Appearance) {
-  Appearance["DARK"] = "dark";
-  Appearance["LIGHT"] = "light";
-})(Appearance || (Appearance = {}));
-
-var Scheme;
-
-(function (Scheme) {
-  Scheme["DEPRECATED_CLIENT_LIGHT"] = "client_light";
-  Scheme["DEPRECATED_CLIENT_DARK"] = "client_dark";
-  Scheme["BRIGHT_LIGHT"] = "bright_light";
-  Scheme["SPACE_GRAY"] = "space_gray";
-})(Scheme || (Scheme = {}));
-
-var WebviewType;
-
-(function (WebviewType) {
-  WebviewType["VKAPPS"] = "vkapps";
-  WebviewType["INTERNAL"] = "internal";
-})(WebviewType || (WebviewType = {}));
-
-var ConfigProviderContext = /*#__PURE__*/react.createContext({});
 
 var PanelHeader = function PanelHeader(_ref) {
   var className = _ref.className,
@@ -2342,28 +2424,25 @@ var PanelHeader = function PanelHeader(_ref) {
       separator = _ref.separator,
       visor = _ref.visor,
       transparent = _ref.transparent,
+      shadow = _ref.shadow,
       getRef = _ref.getRef,
       getRootRef = _ref.getRootRef,
-      restProps = objectWithoutProperties(_ref, ["className", "left", "addon", "children", "right", "separator", "visor", "transparent", "getRef", "getRootRef"]);
+      sizeX = _ref.sizeX,
+      restProps = objectWithoutProperties(_ref, ["className", "left", "addon", "children", "right", "separator", "visor", "transparent", "shadow", "getRef", "getRootRef", "sizeX"]);
 
   var platform = usePlatform();
 
   var _useContext = react.useContext(ConfigProviderContext),
       webviewType = _useContext.webviewType;
 
-  var panelContext = react.useContext(PanelContext);
-  var needSeparator = separator;
-
-  if (typeof separator !== 'boolean') {
-    needSeparator = panelContext.separator;
-  }
-
+  var needShadow = shadow && sizeX === SizeType.REGULAR;
   var isPrimitive = typeof children === 'string' || typeof children === 'number';
   return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
-    className: classNames(getClassName('PanelHeader', platform), {
+    className: classNames(getClassname('PanelHeader', platform), {
       'PanelHeader--trnsp': transparent,
+      'PanelHeader--shadow': needShadow,
       'PanelHeader--vis': visor,
-      'PanelHeader--sep': needSeparator && visor,
+      'PanelHeader--sep': separator && visor,
       'PanelHeader--vkapps': webviewType === WebviewType.VKAPPS,
       'PanelHeader--no-left': left === undefined,
       'PanelHeader--no-right': right === undefined
@@ -2371,7 +2450,9 @@ var PanelHeader = function PanelHeader(_ref) {
     ref: getRootRef
   }), /*#__PURE__*/react.createElement(FixedLayout$1, {
     vertical: "top",
-    className: "PanelHeader__fixed",
+    className: classNames('PanelHeader__fixed', {
+      'PanelHeader__fixed--shadow': needShadow
+    }),
     getRootRef: getRef
   }, /*#__PURE__*/react.createElement("div", {
     className: "PanelHeader__in"
@@ -2381,8 +2462,9 @@ var PanelHeader = function PanelHeader(_ref) {
     className: "PanelHeader__content"
   }, isPrimitive ? /*#__PURE__*/react.createElement("span", null, children) : children), /*#__PURE__*/react.createElement("div", {
     className: "PanelHeader__right"
-  }, webviewType !== WebviewType.VKAPPS && right))), needSeparator && visor && /*#__PURE__*/react.createElement(Separator$1, {
-    className: "PanelHeader__separator"
+  }, webviewType !== WebviewType.VKAPPS && right))), separator && visor && /*#__PURE__*/react.createElement(Separator$1, {
+    className: sizeX === SizeType.COMPACT ? 'PanelHeader__separator' : '',
+    expanded: sizeX === SizeType.REGULAR
   }));
 };
 
@@ -2391,6 +2473,79 @@ PanelHeader.defaultProps = {
   transparent: false,
   visor: true
 };
+var PanelHeader$1 = withAdaptivity(PanelHeader, {
+  sizeX: true
+});
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+var arrayWithHoles = _arrayWithHoles;
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+var iterableToArrayLimit = _iterableToArrayLimit;
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+var arrayLikeToArray = _arrayLikeToArray;
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+var unsupportedIterableToArray = _unsupportedIterableToArray;
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+var nonIterableRest = _nonIterableRest;
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+var slicedToArray = _slicedToArray;
 
 var sprite = createCommonjsModule(function (module, exports) {
 
@@ -2516,7 +2671,194 @@ SvgIcon.defaultProps = {
 
 });
 
+var Caption = function Caption(_ref) {
+  var children = _ref.children,
+      className = _ref.className,
+      weight = _ref.weight,
+      level = _ref.level,
+      caps = _ref.caps,
+      restProps = objectWithoutProperties(_ref, ["children", "className", "weight", "level", "caps"]);
+
+  var platform = usePlatform();
+  var captionWeight = weight;
+
+  if (platform === ANDROID) {
+    if (weight === 'semibold') {
+      captionWeight = 'medium';
+    }
+  }
+
+  return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
+    className: classNames(getClassname('Caption', platform), "Caption--w-".concat(captionWeight), "Caption--l-".concat(level), {
+      'Caption--caps': caps
+    }, className)
+  }), children);
+};
+
+var Subhead = function Subhead(_ref) {
+  var children = _ref.children,
+      className = _ref.className,
+      weight = _ref.weight,
+      Component = _ref.Component,
+      restProps = objectWithoutProperties(_ref, ["children", "className", "weight", "Component"]);
+
+  var platform = usePlatform();
+  var SubheadComponent = Component;
+  var subheadWeight = platform === ANDROID && weight === 'semibold' ? 'medium' : weight;
+
+  if (!Component) {
+    SubheadComponent = platform === ANDROID ? 'h4' : 'h5';
+  }
+
+  return /*#__PURE__*/react.createElement(SubheadComponent, _extends_1({}, restProps, {
+    className: classNames(getClassname('Subhead', platform), "Subhead--w-".concat(subheadWeight), className)
+  }), children);
+};
+
+var Headline = function Headline(_ref) {
+  var children = _ref.children,
+      className = _ref.className,
+      weight = _ref.weight,
+      Component = _ref.Component,
+      restProps = objectWithoutProperties(_ref, ["children", "className", "weight", "Component"]);
+
+  var platform = usePlatform();
+  var HeadlineComponent = Component;
+
+  if (!Component) {
+    HeadlineComponent = platform === ANDROID ? 'h3' : 'h4';
+  }
+
+  var headlineWeight = weight;
+
+  if (platform === ANDROID && weight === 'semibold') {
+    headlineWeight = 'medium';
+  }
+
+  return /*#__PURE__*/react.createElement(HeadlineComponent, _extends_1({}, restProps, {
+    className: classNames(getClassname('Headline', platform), "Headline--w-".concat(headlineWeight), className)
+  }), children);
+};
+
+var getComponent = function getComponent(level) {
+  if (!level) {
+    return 'div';
+  }
+
+  return 'h' + level;
+};
+
+var getAndroidTitleWeight = function getAndroidTitleWeight(level, weight) {
+  if (level === '3') {
+    return weight === 'regular' ? weight : 'medium';
+  }
+
+  if (level === '2' && weight === 'semibold') {
+    return 'medium';
+  }
+
+  if (weight === 'heavy') {
+    return 'bold';
+  }
+
+  return weight;
+};
+
+var Title = function Title(_ref) {
+  var children = _ref.children,
+      className = _ref.className,
+      weight = _ref.weight,
+      level = _ref.level,
+      Component = _ref.Component,
+      restProps = objectWithoutProperties(_ref, ["children", "className", "weight", "level", "Component"]);
+
+  var platform = usePlatform();
+  var TitleComponent = Component || getComponent(level);
+  var titleWeight = platform === ANDROID ? getAndroidTitleWeight(level, weight) : weight;
+
+  if (platform === ANDROID && level === '3') {
+    return /*#__PURE__*/react.createElement(Headline, _extends_1({
+      Component: TitleComponent
+    }, restProps, {
+      weight: titleWeight,
+      className: className
+    }), children);
+  }
+
+  return /*#__PURE__*/react.createElement(TitleComponent, _extends_1({}, restProps, {
+    className: classNames(getClassname('Title', platform), "Title--w-".concat(titleWeight), "Title--l-".concat(level), className)
+  }), children);
+};
+
+var Text = function Text(_ref) {
+  var children = _ref.children,
+      className = _ref.className,
+      weight = _ref.weight,
+      restProps = objectWithoutProperties(_ref, ["children", "className", "weight"]);
+
+  var platform = usePlatform();
+  var textWeight = weight;
+
+  if (platform === ANDROID) {
+    if (weight === 'semibold') {
+      textWeight = 'medium';
+    }
+  }
+
+  return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
+    className: classNames(getClassname('Text', platform), "Text--w-".concat(textWeight), className)
+  }), children);
+};
+
+var getContent = function getContent(size, children, hasIcons, sizeY, platform) {
+  switch (size) {
+    case 'l':
+      return sizeY === SizeType.COMPACT ? /*#__PURE__*/react.createElement(Text, {
+        weight: "medium",
+        className: "Button__content"
+      }, children) : /*#__PURE__*/react.createElement(Title, {
+        level: "3",
+        weight: "medium",
+        Component: "div",
+        className: "Button__content"
+      }, children);
+
+    case 'm':
+      return sizeY === SizeType.COMPACT ? /*#__PURE__*/react.createElement(Subhead, {
+        weight: "medium",
+        className: "Button__content",
+        Component: "div"
+      }, children) : /*#__PURE__*/react.createElement(Text, {
+        weight: "medium",
+        className: "Button__content"
+      }, children);
+
+    case 's':
+    default:
+      if (hasIcons) {
+        return /*#__PURE__*/react.createElement(Caption, {
+          caps: platform !== OS.VKCOM,
+          level: platform === OS.VKCOM ? '1' : sizeY === SizeType.COMPACT ? '3' : '2',
+          weight: platform === OS.VKCOM || sizeY === SizeType.COMPACT ? 'medium' : 'semibold',
+          className: 'Button__content' + (platform !== OS.VKCOM ? '--caps' : '')
+        }, children);
+      }
+
+      return sizeY === SizeType.COMPACT ? /*#__PURE__*/react.createElement(Caption, {
+        weight: "medium",
+        level: "1",
+        className: "Button__content"
+      }, children) : /*#__PURE__*/react.createElement(Subhead, {
+        weight: "medium",
+        Component: "div",
+        className: "Button__content"
+      }, children);
+  }
+};
+
 var Button = function Button(props) {
+  var _classNames;
+
   var platform = usePlatform();
 
   var className = props.className,
@@ -2529,19 +2871,19 @@ var Button = function Button(props) {
       after = props.after,
       getRootRef = props.getRootRef,
       Component = props.Component,
-      restProps = objectWithoutProperties(props, ["className", "size", "mode", "stretched", "align", "children", "before", "after", "getRootRef", "Component"]);
+      sizeY = props.sizeY,
+      restProps = objectWithoutProperties(props, ["className", "size", "mode", "stretched", "align", "children", "before", "after", "getRootRef", "Component", "sizeY"]);
 
+  var hasIcons = Boolean(before || after);
   return /*#__PURE__*/react.createElement(Tappable$1, _extends_1({}, restProps, {
-    className: classNames(getClassName('Button', platform), className, "Button--sz-".concat(size), "Button--lvl-".concat(mode), "Button--aln-".concat(align || 'center'), defineProperty({}, 'Button--str', stretched)),
+    className: classNames(getClassname('Button', platform), className, "Button--sz-".concat(size), "Button--lvl-".concat(mode), "Button--aln-".concat(align || 'center'), "Button--sizeY-".concat(sizeY), (_classNames = {}, defineProperty(_classNames, 'Button--str', stretched), defineProperty(_classNames, 'Button--with-icon', hasIcons), _classNames)),
     getRootRef: getRootRef,
     Component: restProps.href ? 'a' : Component
   }), /*#__PURE__*/react.createElement("div", {
     className: "Button__in"
   }, before && /*#__PURE__*/react.createElement("div", {
     className: "Button__before"
-  }, before), children && /*#__PURE__*/react.createElement("div", {
-    className: "Button__content"
-  }, children), after && /*#__PURE__*/react.createElement("div", {
+  }, before), children && getContent(size, children, hasIcons, sizeY, platform), after && /*#__PURE__*/react.createElement("div", {
     className: "Button__after"
   }, after)));
 };
@@ -2549,10 +2891,13 @@ var Button = function Button(props) {
 Button.defaultProps = {
   mode: 'primary',
   Component: 'button',
-  size: 'm',
+  size: 's',
   stretched: false,
   stopPropagation: true
 };
+var Button$1 = withAdaptivity(Button, {
+  sizeY: true
+});
 
 var List = function List(_ref) {
   var className = _ref.className,
@@ -2560,68 +2905,11 @@ var List = function List(_ref) {
       restProps = objectWithoutProperties(_ref, ["className", "children"]);
 
   var platform = usePlatform();
-  var baseClassName = getClassName('List', platform);
+  var baseClassName = getClassname('List', platform);
   return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
     className: classNames(baseClassName, className)
   }), children);
 };
-
-var chevron = createCommonjsModule(function (module, exports) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(react);
-
-var _browserSymbol = _interopRequireDefault(browserSymbol);
-
-
-
-
-
-
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// @ts-ignore
-// @ts-ignore
-var viewBox = '0 0 16 24';
-var id = 'chevron_24';
-var content = '<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 24" id="chevron_24"><g fill="none" fill-rule="evenodd"><path d="M0 0h16v24H0z" /><path d="M4.706 7.706a1 1 0 010-1.412l.088-.088a.997.997 0 011.414.002l5.084 5.084a.998.998 0 010 1.416l-5.084 5.084a1.002 1.002 0 01-1.414.002l-.088-.088a.995.995 0 010-1.412L9 12 4.706 7.706z" fill="currentColor" /></g></symbol>';
-var isMounted = false;
-
-function mountIcon() {
-  if (!isMounted) {
-    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
-      id: id,
-      viewBox: viewBox,
-      content: content
-    }));
-    isMounted = true;
-  }
-}
-
-var Icon24Chevron = function Icon24Chevron(props) {
-  (0, sprite.useIsomorphicLayoutEffect)(function () {
-    mountIcon();
-  }, []);
-  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
-    viewBox: viewBox,
-    id: id,
-    width: !isNaN(props.width) ? +props.width : 16,
-    height: !isNaN(props.height) ? +props.height : 24
-  }));
-};
-
-Icon24Chevron.mountIcon = mountIcon;
-var _default = Icon24Chevron;
-exports.default = _default;
-
-});
-
-var Icon24Chevron = /*@__PURE__*/getDefaultExportFromCjs(chevron);
 
 var cancel = createCommonjsModule(function (module, exports) {
 
@@ -2680,6 +2968,63 @@ exports.default = _default;
 
 var Icon24Cancel = /*@__PURE__*/getDefaultExportFromCjs(cancel);
 
+var chevron = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 16 24';
+var id = 'chevron_24';
+var content = '<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 24" id="chevron_24"><g fill="none" fill-rule="evenodd"><path d="M0 0h16v24H0z" /><path d="M4.706 7.706a1 1 0 010-1.412l.088-.088a.997.997 0 011.414.002l5.084 5.084a.998.998 0 010 1.416l-5.084 5.084a1.002 1.002 0 01-1.414.002l-.088-.088a.995.995 0 010-1.412L9 12 4.706 7.706z" fill="currentColor" /></g></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon24Chevron = function Icon24Chevron(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 16,
+    height: !isNaN(props.height) ? +props.height : 24
+  }));
+};
+
+Icon24Chevron.mountIcon = mountIcon;
+var _default = Icon24Chevron;
+exports.default = _default;
+
+});
+
+var Icon24Chevron = /*@__PURE__*/getDefaultExportFromCjs(chevron);
+
 var SimpleCell = function SimpleCell(_ref) {
   var before = _ref.before,
       indicator = _ref.indicator,
@@ -2689,13 +3034,17 @@ var SimpleCell = function SimpleCell(_ref) {
       className = _ref.className,
       expandable = _ref.expandable,
       multiline = _ref.multiline,
-      restProps = objectWithoutProperties(_ref, ["before", "indicator", "children", "after", "description", "className", "expandable", "multiline"]);
+      Component = _ref.Component,
+      sizeX = _ref.sizeX,
+      restProps = objectWithoutProperties(_ref, ["before", "indicator", "children", "after", "description", "className", "expandable", "multiline", "Component", "sizeX"]);
 
   var platform = usePlatform();
   var hasAfter = hasReactNode(after) || expandable && platform === IOS;
-  return /*#__PURE__*/react.createElement(Tappable$1, _extends_1({}, restProps, {
-    Component: restProps.href ? 'a' : 'div',
-    className: classNames(className, getClassName('SimpleCell', platform), {
+  var RootComponent = restProps.disabled ? Component : Tappable$1;
+  Component = restProps.disabled ? undefined : Component;
+  return /*#__PURE__*/react.createElement(RootComponent, _extends_1({}, restProps, {
+    Component: restProps.href ? 'a' : Component,
+    className: classNames(className, getClassname('SimpleCell', platform), "SimpleCell--sizeX-".concat(sizeX), {
       'SimpleCell--exp': expandable,
       'SimpleCell--mult': multiline
     })
@@ -2712,6 +3061,13 @@ var SimpleCell = function SimpleCell(_ref) {
   }, after, expandable && platform === IOS && /*#__PURE__*/react.createElement(Icon24Chevron, null)));
 };
 
+SimpleCell.defaultProps = {
+  Component: 'div'
+};
+var SimpleCell$1 = withAdaptivity(SimpleCell, {
+  sizeX: true
+});
+
 var Div = function Div(_ref) {
   var className = _ref.className,
       children = _ref.children,
@@ -2721,13 +3077,13 @@ var Div = function Div(_ref) {
   var platform = usePlatform();
   return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
     ref: getRootRef,
-    className: classNames(getClassName('Div', platform), className)
+    className: classNames(getClassname('Div', platform), className)
   }), children);
 };
 
-function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$7(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var Avatar = function Avatar(_ref) {
   var src = _ref.src,
@@ -2759,7 +3115,7 @@ var Avatar = function Avatar(_ref) {
   }
 
   return /*#__PURE__*/react.createElement("div", {
-    className: classNames(getClassName('Avatar', platform), className, "Avatar--type-".concat(mode), "Avatar--sz-".concat(size)),
+    className: classNames(getClassname('Avatar', platform), className, "Avatar--type-".concat(mode), "Avatar--sz-".concat(size)),
     ref: getRootRef
   }, /*#__PURE__*/react.createElement("div", {
     className: "Avatar__in",
@@ -2770,7 +3126,7 @@ var Avatar = function Avatar(_ref) {
   }, /*#__PURE__*/react.createElement(Component, _extends_1({}, restProps, {
     className: "Avatar__img",
     src: src,
-    style: _objectSpread$7(_objectSpread$7({}, style), {}, {
+    style: _objectSpread$6(_objectSpread$6({}, style), {}, {
       borderRadius: borderRadius
     })
   })), shadow && /*#__PURE__*/react.createElement("span", {
@@ -2803,7 +3159,7 @@ var Progress = function Progress(props) {
   var platform = usePlatform();
   return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
     ref: getRootRef,
-    className: classNames(getClassName('Progress', platform), className)
+    className: classNames(getClassname('Progress', platform), className)
   }), /*#__PURE__*/react.createElement("div", {
     className: "Progress__bg"
   }), /*#__PURE__*/react.createElement("div", {
@@ -2824,14 +3180,12 @@ var Placeholder = function Placeholder(props) {
       header = props.header,
       action = props.action,
       children = props.children,
-      stretched = props.stretched,
-      restProps = objectWithoutProperties(props, ["className", "icon", "header", "action", "children", "stretched"]);
-
-  return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
+      stretched = props.stretched;
+  return /*#__PURE__*/react.createElement("div", {
     className: classNames('Placeholder', {
       'Placeholder--stretched': stretched
     }, className)
-  }), /*#__PURE__*/react.createElement("div", {
+  }, /*#__PURE__*/react.createElement("div", {
     className: "Placeholder__in"
   }, icon && /*#__PURE__*/react.createElement("div", {
     className: "Placeholder__icon"
@@ -2978,7 +3332,7 @@ var Banner = function Banner(props) {
 
   var InnerComponent = asideMode === 'expand' ? Tappable$1 : 'div';
   return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
-    className: classNames(getClassName('Banner', platform), "Banner--md-".concat(mode), "Banner--sz-".concat(size), {
+    className: classNames(getClassname('Banner', platform), "Banner--md-".concat(mode), "Banner--sz-".concat(size), {
       'Banner--inverted': mode === 'image' && imageTheme === 'dark'
     }, className)
   }), /*#__PURE__*/react.createElement(InnerComponent, {
@@ -3013,26 +3367,6 @@ Banner.defaultProps = {
   imageTheme: 'dark'
 };
 
-var Text = function Text(_ref) {
-  var children = _ref.children,
-      className = _ref.className,
-      weight = _ref.weight,
-      restProps = objectWithoutProperties(_ref, ["children", "className", "weight"]);
-
-  var platform = usePlatform();
-  var textWeight = weight;
-
-  if (platform === ANDROID) {
-    if (weight === 'semibold') {
-      textWeight = 'medium';
-    }
-  }
-
-  return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
-    className: classNames(getClassName('Text', platform), "Text--w-".concat(textWeight), className)
-  }), children);
-};
-
 var preventDefault = function preventDefault(e) {
   return e.preventDefault();
 };
@@ -3047,7 +3381,7 @@ var FormLayout = function FormLayout(props) {
 
   var platform = usePlatform();
   return /*#__PURE__*/react.createElement(Component, _extends_1({}, restProps, {
-    className: classNames(getClassName('FormLayout', platform), className),
+    className: classNames(getClassname('FormLayout', platform), className),
     onSubmit: onSubmit,
     ref: getRef
   }), /*#__PURE__*/react.createElement("div", {
@@ -3087,12 +3421,31 @@ var FormLayoutGroup = function FormLayoutGroup(_ref) {
       bottom = _ref.bottom,
       className = _ref.className,
       status = _ref.status,
-      restProps = objectWithoutProperties(_ref, ["children", "top", "bottom", "className", "status"]);
+      _ref$mode = _ref.mode,
+      mode = _ref$mode === void 0 ? 'vertical' : _ref$mode,
+      restProps = objectWithoutProperties(_ref, ["children", "top", "bottom", "className", "status", "mode"]);
 
   var platform = usePlatform();
   return /*#__PURE__*/react.createElement("div", _extends_1({
-    className: classNames(getClassName('FormLayoutGroup', platform), className)
-  }, restProps), children);
+    className: classNames(getClassname('FormLayoutGroup', platform), "FormLayoutGroup--".concat(mode), className)
+  }, restProps), mode === 'vertical' ? children : react.Children.toArray(children).map(function (field, index) {
+    if (field) {
+      var _field$props = field.props,
+          _status = _field$props.status,
+          _top = _field$props.top,
+          _bottom = _field$props.bottom;
+      return /*#__PURE__*/react.createElement("div", {
+        className: classNames('FormLayoutGroup__cell', defineProperty({}, "FormLayout__row--s-".concat(_status), !!_status)),
+        key: field.key || "row-".concat(index)
+      }, _top && /*#__PURE__*/react.createElement("div", {
+        className: "FormLayout__row-top"
+      }, _top), field, _bottom && /*#__PURE__*/react.createElement("div", {
+        className: "FormLayout__row-bottom"
+      }, _bottom));
+    } else {
+      return null;
+    }
+  }));
 };
 
 var FormField = function FormField(_ref) {
@@ -3106,11 +3459,31 @@ var FormField = function FormField(_ref) {
       restProps = objectWithoutProperties(_ref, ["Component", "className", "children", "status", "getRootRef", "top", "bottom"]);
 
   var platform = usePlatform();
+
+  var _useState = react.useState(false),
+      _useState2 = slicedToArray(_useState, 2),
+      hover = _useState2[0],
+      setHover = _useState2[1];
+
+  var handleMouseEnter = function handleMouseEnter(e) {
+    e.stopPropagation();
+    setHover(true);
+  };
+
+  var handleMouseLeave = function handleMouseLeave(e) {
+    e.stopPropagation();
+    setHover(false);
+  };
+
   return /*#__PURE__*/react.createElement(Component, _extends_1({}, restProps, {
     ref: getRootRef,
-    className: classNames(getClassName('FormField', platform), defineProperty({}, "FormField--s-".concat(status), status !== 'default'), className)
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    className: classNames(getClassname('FormField', platform), defineProperty({}, "FormField--s-".concat(status), status !== 'default'), className)
   }), children, /*#__PURE__*/react.createElement("div", {
-    className: "FormField__border"
+    className: classNames('FormField__border', {
+      'FormField__border--hover': hover
+    })
   }));
 };
 
@@ -3127,10 +3500,12 @@ var Input = function Input(_ref) {
       getRootRef = _ref.getRootRef,
       top = _ref.top,
       bottom = _ref.bottom,
-      restProps = objectWithoutProperties(_ref, ["align", "status", "getRef", "className", "getRootRef", "top", "bottom"]);
+      sizeY = _ref.sizeY,
+      restProps = objectWithoutProperties(_ref, ["align", "status", "getRef", "className", "getRootRef", "top", "bottom", "sizeY"]);
 
+  var platform = usePlatform();
   return /*#__PURE__*/react.createElement(FormField, {
-    className: classNames('Input', className, defineProperty({}, "Input--".concat(align), !!align)),
+    className: classNames(getClassname('Input', platform), className, defineProperty({}, "Input--".concat(align), !!align), "Input--sizeY-".concat(sizeY)),
     status: status,
     getRootRef: getRootRef
   }, /*#__PURE__*/react.createElement("input", _extends_1({}, restProps, {
@@ -3142,15 +3517,18 @@ var Input = function Input(_ref) {
 Input.defaultProps = {
   type: 'text'
 };
+var Input$1 = withAdaptivity(Input, {
+  sizeY: true
+});
 
-function _createSuper$6(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$6(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$7(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$7(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$6() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$7() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var Textarea = /*#__PURE__*/function (_PureComponent) {
   inherits(Textarea, _PureComponent);
 
-  var _super = _createSuper$6(Textarea);
+  var _super = _createSuper$7(Textarea);
 
   function Textarea(props) {
     var _this;
@@ -3165,15 +3543,7 @@ var Textarea = /*#__PURE__*/function (_PureComponent) {
 
     defineProperty(assertThisInitialized(_this), "getRef", function (element) {
       _this.element = element;
-      var getRef = _this.props.getRef;
-
-      if (getRef) {
-        if (typeof getRef === 'function') {
-          getRef(element);
-        } else {
-          getRef.current = element;
-        }
-      }
+      setRef(element, _this.props.getRef);
     });
 
     defineProperty(assertThisInitialized(_this), "resize", function () {
@@ -3276,11 +3646,13 @@ var Textarea = /*#__PURE__*/function (_PureComponent) {
           status = _this$props.status,
           top = _this$props.top,
           bottom = _this$props.bottom,
-          restProps = objectWithoutProperties(_this$props, ["defaultValue", "value", "onChange", "grow", "style", "onResize", "className", "getRootRef", "getRef", "status", "top", "bottom"]);
+          sizeY = _this$props.sizeY,
+          platform = _this$props.platform,
+          restProps = objectWithoutProperties(_this$props, ["defaultValue", "value", "onChange", "grow", "style", "onResize", "className", "getRootRef", "getRef", "status", "top", "bottom", "sizeY", "platform"]);
 
       var height = this.state.height || style.height || 66;
       return /*#__PURE__*/react.createElement(FormField, {
-        className: classNames('Textarea', className),
+        className: classNames(getClassname('Textarea', platform), className, "Textarea--sizeY-".concat(sizeY)),
         style: style,
         getRootRef: getRootRef,
         status: status
@@ -3310,6 +3682,10 @@ defineProperty(Textarea, "defaultProps", {
   grow: true
 });
 
+var Textarea$1 = withPlatform(withAdaptivity(Textarea, {
+  sizeY: true
+}));
+
 var Radio = function Radio(props) {
   var children = props.children,
       description = props.description,
@@ -3319,13 +3695,14 @@ var Radio = function Radio(props) {
       getRootRef = props.getRootRef,
       top = props.top,
       bottom = props.bottom,
-      restProps = objectWithoutProperties(props, ["children", "description", "style", "className", "getRef", "getRootRef", "top", "bottom"]);
+      sizeY = props.sizeY,
+      restProps = objectWithoutProperties(props, ["children", "description", "style", "className", "getRef", "getRootRef", "top", "bottom", "sizeY"]);
 
   var platform = usePlatform();
   return /*#__PURE__*/react.createElement(Tappable$1, {
     Component: "label",
     style: style,
-    className: classNames(getClassName('Radio', platform), className),
+    className: classNames(getClassname('Radio', platform), className, "Radio--sizeY-".concat(sizeY)),
     activeEffectDelay: platform === IOS ? 100 : ACTIVE_EFFECT_DELAY,
     disabled: restProps.disabled,
     getRootRef: getRootRef
@@ -3344,7 +3721,125 @@ var Radio = function Radio(props) {
   }, description))));
 };
 
+var Radio$1 = withAdaptivity(Radio, {
+  sizeY: true
+});
+
 var dropdown = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 16 12';
+var id = 'dropdown_16';
+var content = '<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 12" id="dropdown_16"><g fill="none" fill-rule="evenodd"><path d="M0 0h16v12H0z" /><path d="M4.454 3.691A.9.9 0 103.346 5.11l4.096 3.203a.9.9 0 001.109 0l4.1-3.203a.9.9 0 10-1.108-1.418L7.997 6.46l-3.543-2.77z" fill="currentColor" fill-rule="nonzero" /></g></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon16Dropdown = function Icon16Dropdown(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 16,
+    height: !isNaN(props.height) ? +props.height : 12
+  }));
+};
+
+Icon16Dropdown.mountIcon = mountIcon;
+var _default = Icon16Dropdown;
+exports.default = _default;
+
+});
+
+var Icon16Dropdown = /*@__PURE__*/getDefaultExportFromCjs(dropdown);
+
+var dropdown$1 = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 20 16';
+var id = 'dropdown_20';
+var content = '<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 16" id="dropdown_20"><path d="M5.703 5.122a1.125 1.125 0 10-1.406 1.756l5 4c.411.33.995.33 1.406 0l5-4a1.125 1.125 0 10-1.406-1.756L10 8.559 5.703 5.122z" fill="currentColor" /></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon20Dropdown = function Icon20Dropdown(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 20,
+    height: !isNaN(props.height) ? +props.height : 16
+  }));
+};
+
+Icon20Dropdown.mountIcon = mountIcon;
+var _default = Icon20Dropdown;
+exports.default = _default;
+
+});
+
+var Icon20Dropdown = /*@__PURE__*/getDefaultExportFromCjs(dropdown$1);
+
+var dropdown$2 = createCommonjsModule(function (module, exports) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -3399,9 +3894,11 @@ exports.default = _default;
 
 });
 
-var Icon24Dropdown = /*@__PURE__*/getDefaultExportFromCjs(dropdown);
+var Icon24Dropdown = /*@__PURE__*/getDefaultExportFromCjs(dropdown$2);
 
 var SelectMimicry = function SelectMimicry(_ref) {
+  var _classNames;
+
   var className = _ref.className,
       tabIndex = _ref.tabIndex,
       placeholder = _ref.placeholder,
@@ -3412,15 +3909,18 @@ var SelectMimicry = function SelectMimicry(_ref) {
       multiline = _ref.multiline,
       disabled = _ref.disabled,
       onClick = _ref.onClick,
-      restProps = objectWithoutProperties(_ref, ["className", "tabIndex", "placeholder", "children", "align", "status", "getRootRef", "multiline", "disabled", "onClick"]);
+      sizeX = _ref.sizeX,
+      sizeY = _ref.sizeY,
+      restProps = objectWithoutProperties(_ref, ["className", "tabIndex", "placeholder", "children", "align", "status", "getRootRef", "multiline", "disabled", "onClick", "sizeX", "sizeY"]);
 
+  var platform = usePlatform();
   return /*#__PURE__*/react.createElement(FormField, _extends_1({}, restProps, {
     tabIndex: disabled ? null : tabIndex,
-    className: classNames('Select', 'Select--mimicry', defineProperty({
+    className: classNames(getClassname('Select', platform), 'Select--mimicry', (_classNames = {
       'Select--not-selected': !children,
       'Select--multiline': multiline,
       'Select--disabled': disabled
-    }, "Select--align-".concat(align), !!align), className),
+    }, defineProperty(_classNames, "Select--align-".concat(align), !!align), defineProperty(_classNames, "Select--sizeX--".concat(sizeX), !!sizeX), defineProperty(_classNames, "Select--sizeY--".concat(sizeY), !!sizeY), _classNames), className),
     getRootRef: getRootRef,
     status: status,
     onClick: disabled ? null : onClick
@@ -3428,12 +3928,16 @@ var SelectMimicry = function SelectMimicry(_ref) {
     className: "Select__container"
   }, /*#__PURE__*/react.createElement("div", {
     className: "Select__title"
-  }, children || placeholder), /*#__PURE__*/react.createElement(Icon24Dropdown, null)));
+  }, children || placeholder), sizeX === SizeType.COMPACT ? /*#__PURE__*/react.createElement(Icon16Dropdown, null) : sizeY === SizeType.COMPACT ? /*#__PURE__*/react.createElement(Icon20Dropdown, null) : /*#__PURE__*/react.createElement(Icon24Dropdown, null)));
 };
 
 SelectMimicry.defaultProps = {
   tabIndex: 0
 };
+var SelectMimicry$1 = withAdaptivity(SelectMimicry, {
+  sizeX: true,
+  sizeY: true
+});
 
 var chevron_back = createCommonjsModule(function (module, exports) {
 
@@ -3556,97 +4060,4 @@ var PanelHeaderBack = function PanelHeaderBack(props) {
 
 var PanelHeaderBack$1 = /*#__PURE__*/react.memo(PanelHeaderBack);
 
-var Headline = function Headline(_ref) {
-  var children = _ref.children,
-      className = _ref.className,
-      weight = _ref.weight,
-      restProps = objectWithoutProperties(_ref, ["children", "className", "weight"]);
-
-  var platform = usePlatform();
-  var Component = 'h4';
-  var headlineWeight = weight;
-
-  if (platform === ANDROID) {
-    Component = 'h3';
-
-    if (weight === 'semibold') {
-      headlineWeight = 'medium';
-    }
-  }
-
-  return /*#__PURE__*/react.createElement(Component, _extends_1({}, restProps, {
-    className: classNames(getClassName('Headline', platform), "Headline--w-".concat(headlineWeight), className)
-  }), children);
-};
-
-var Title = function Title(_ref) {
-  var children = _ref.children,
-      className = _ref.className,
-      weight = _ref.weight,
-      level = _ref.level,
-      restProps = objectWithoutProperties(_ref, ["children", "className", "weight", "level"]);
-
-  var platform = usePlatform();
-  var Component = 'div';
-
-  switch (level) {
-    case '1':
-      Component = 'h1';
-      break;
-
-    case '2':
-      Component = 'h2';
-      break;
-
-    case '3':
-      Component = 'h3';
-      break;
-  }
-
-  var titleWeight = weight;
-
-  if (platform === ANDROID) {
-    if (level === '3') {
-      var headlineWeight;
-
-      switch (weight) {
-        case 'heavy':
-        case 'bold':
-        case 'semibold':
-          headlineWeight = 'medium';
-          break;
-
-        default:
-          headlineWeight = weight;
-      }
-
-      return /*#__PURE__*/react.createElement(Headline, _extends_1({}, restProps, {
-        weight: headlineWeight,
-        className: className
-      }), children);
-    }
-
-    if (platform === ANDROID) {
-      if (level === '1' && weight === 'heavy') {
-        titleWeight = 'bold';
-      }
-
-      if (level === '2') {
-        switch (weight) {
-          case 'heavy':
-            titleWeight = 'bold';
-            break;
-
-          case 'semibold':
-            titleWeight = 'medium';
-        }
-      }
-    }
-  }
-
-  return /*#__PURE__*/react.createElement(Component, _extends_1({}, restProps, {
-    className: classNames(getClassName('Title', platform), "Title--w-".concat(titleWeight), "Title--l-".concat(level), className)
-  }), children);
-};
-
-export { ANDROID, Avatar, Banner, Button, Div, FormLayout, FormLayoutGroup, IOS, Input, List, Panel$1 as Panel, PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, Placeholder, Progress, Radio, Root$1 as Root, SelectMimicry, Separator$1 as Separator, SimpleCell, Tappable$1 as Tappable, Text, Textarea, Title, View$1 as View, classNames, getClassName, usePlatform, withPlatform };
+export { ANDROID, Avatar, Banner, Button$1 as Button, Div, FormLayout, FormLayoutGroup, IOS, Input$1 as Input, List, Panel$1 as Panel, PanelHeader$1 as PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, Placeholder, Progress, Radio$1 as Radio, Root$1 as Root, SelectMimicry$1 as SelectMimicry, Separator$1 as Separator, SimpleCell$1 as SimpleCell, Tappable$1 as Tappable, Text, Textarea$1 as Textarea, Title, View$1 as View, classNames, getClassname as getClassName, usePlatform, withPlatform };
