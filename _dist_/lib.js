@@ -5,9 +5,6 @@ export const moneyFormat = x => {
 };
 export const todayDate = () => {
   const today = new Date();
-  console.log(today.getDate());
-  console.log(today.getMonth() + 1);
-  console.log(today.getFullYear());
   return {
     day: today.getDate(),
     month: today.getMonth() + 1,
