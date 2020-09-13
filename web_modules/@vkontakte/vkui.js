@@ -925,8 +925,53 @@ function getSupportedEvents() {
 
   return ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 }
+/*
+ * Рассчитывает "сопротивление" для iOS тач-событий
+ */
+
+
+function rubber(offset, dimension, resistanceRate, isAndroid) {
+  if (isAndroid || offset < 0) {
+    return offset;
+  }
+
+  var offsettedResistance = offset * resistanceRate;
+  return offsettedResistance * dimension / (offsettedResistance + dimension);
+}
 
 // Является ли переданное значение числовым
+
+function isFunction(value) {
+  return typeof value === 'function';
+}
+function debounce(fn, delay) {
+  var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : window;
+  var timeout;
+  var args = null;
+
+  var later = function later() {
+    return fn.apply(context, args);
+  };
+
+  return function () {
+    for (var _len2 = arguments.length, a = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      a[_key2] = arguments[_key2];
+    }
+
+    args = a;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, delay);
+  };
+}
+function leadingZero(val) {
+  var strVal = val.toFixed();
+
+  if (strVal.length === 1) {
+    return '0' + strVal;
+  }
+
+  return strVal;
+}
 function hasReactNode(value) {
   return value !== undefined && value !== false && value !== null;
 }
@@ -2790,6 +2835,1483 @@ var Title = function Title(_ref) {
   }), children);
 };
 
+var done = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 16 16';
+var id = 'done_16';
+var content = '<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" id="done_16"><g fill="none" fill-rule="evenodd"><path d="M0 0h16v16H0z" /><path d="M6 10.2L3.5 7.7a.99.99 0 10-1.4 1.4l3.193 3.193a1 1 0 001.414 0L14.3 4.7a.99.99 0 00-1.4-1.4L6 10.2z" fill="currentColor" /></g></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon16Done = function Icon16Done(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 16,
+    height: !isNaN(props.height) ? +props.height : 16
+  }));
+};
+
+Icon16Done.mountIcon = mountIcon;
+var _default = Icon16Done;
+exports.default = _default;
+
+});
+
+var SelectedIcon = /*@__PURE__*/getDefaultExportFromCjs(done);
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+
+var arrayWithoutHoles = _arrayWithoutHoles;
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+var iterableToArray = _iterableToArray;
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+var nonIterableSpread = _nonIterableSpread;
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+
+var toConsumableArray = _toConsumableArray;
+
+/*
+ * Задает стиль трансформации элементу с учетом префиксов
+ */
+function setTransformStyle(element, transform) {
+  element.style.transform = transform;
+  element.style.webkitTransform = transform;
+}
+
+var ModalRootContext = /*#__PURE__*/react.createContext({
+  updateModalHeight: function updateModalHeight() {
+    return undefined;
+  }
+});
+
+var ModalType;
+
+(function (ModalType) {
+  ModalType["PAGE"] = "page";
+  ModalType["CARD"] = "card";
+})(ModalType || (ModalType = {}));
+
+function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _createSuper$7(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$7(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$7() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function numberInRange(number, range) {
+  return number >= range[0] && number <= range[1];
+}
+
+function rangeTranslate(number) {
+  return Math.max(0, Math.min(98, number));
+}
+
+var ModalRootTouch = /*#__PURE__*/function (_Component) {
+  inherits(ModalRootTouch, _Component);
+
+  var _super = _createSuper$7(ModalRootTouch);
+
+  function ModalRootTouch(props) {
+    var _this;
+
+    classCallCheck(this, ModalRootTouch);
+
+    _this = _super.call(this, props);
+
+    defineProperty(assertThisInitialized(_this), "modalsState", void 0);
+
+    defineProperty(assertThisInitialized(_this), "documentScrolling", void 0);
+
+    defineProperty(assertThisInitialized(_this), "activeTransitions", void 0);
+
+    defineProperty(assertThisInitialized(_this), "maskElementRef", void 0);
+
+    defineProperty(assertThisInitialized(_this), "maskAnimationFrame", void 0);
+
+    defineProperty(assertThisInitialized(_this), "modalRootContext", void 0);
+
+    defineProperty(assertThisInitialized(_this), "frameIds", void 0);
+
+    defineProperty(assertThisInitialized(_this), "preventTouch", function (event) {
+      if (!event) {
+        return false;
+      }
+
+      while (event.originalEvent) {
+        event = event.originalEvent;
+      }
+
+      if (event.preventDefault) {
+        event.preventDefault();
+      }
+
+      return false;
+    });
+
+    defineProperty(assertThisInitialized(_this), "updateModalHeight", function () {
+      var _this$state = _this.state,
+          activeModal = _this$state.activeModal,
+          nextModal = _this$state.nextModal;
+      var modalId = activeModal || nextModal;
+      var modalState = modalId ? _this.modalsState[modalId] : undefined;
+
+      if (modalState && modalState.type === ModalType.PAGE && modalState.dynamicContentHeight) {
+        if (_this.state.switching) {
+          _this.waitTransitionFinish(modalState, function () {
+            requestAnimationFrame(function () {
+              return _this.checkPageContentHeight();
+            });
+          });
+        } else {
+          requestAnimationFrame(function () {
+            return _this.checkPageContentHeight();
+          });
+        }
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "onTouchMove", function (e) {
+      if (_this.state.switching) {
+        return;
+      }
+
+      var activeModal = _this.state.activeModal || _this.state.nextModal;
+
+      if (!activeModal) {
+        return;
+      }
+
+      var modalState = _this.modalsState[activeModal];
+
+      if (modalState.type === ModalType.PAGE) {
+        return _this.onPageTouchMove(e, modalState);
+      }
+
+      if (modalState.type === ModalType.CARD) {
+        return _this.onCardTouchMove(e, modalState);
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "onTouchEnd", function (e) {
+      var activeModal = _this.state.activeModal || _this.state.nextModal;
+
+      if (!activeModal) {
+        return;
+      }
+
+      var modalState = _this.modalsState[activeModal];
+
+      if (modalState.type === ModalType.PAGE) {
+        return _this.onPageTouchEnd(e, modalState);
+      }
+
+      if (modalState.type === ModalType.CARD) {
+        return _this.onCardTouchEnd(modalState);
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "onScroll", function (e) {
+      var activeModal = _this.state.activeModal;
+      var target = e.target;
+
+      if (activeModal && target.closest('.ModalPage__content')) {
+        var modalState = _this.modalsState[activeModal];
+        modalState.contentScrolled = true;
+        clearTimeout(modalState.contentScrollStopTimeout);
+        modalState.contentScrollStopTimeout = window.setTimeout(function () {
+          if (modalState.contentScrolled) {
+            modalState.contentScrolled = false;
+          }
+        }, 250);
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "prevNextSwitchEndHandler", function () {
+      _this.activeTransitions = Math.max(0, _this.activeTransitions - 1);
+
+      if (_this.activeTransitions > 0) {
+        return;
+      }
+
+      var activeModal = _this.state.nextModal;
+      var newState = {
+        prevModal: null,
+        nextModal: null,
+        visibleModals: [activeModal],
+        activeModal: activeModal,
+        animated: false,
+        switching: false
+      };
+
+      if (!activeModal) {
+        newState.history = [];
+      }
+
+      _this.setState(newState);
+    });
+
+    defineProperty(assertThisInitialized(_this), "doCloseModal", function (modalState) {
+      if (isFunction(modalState.onClose)) {
+        modalState.onClose();
+      } else if (isFunction(_this.props.onClose)) {
+        _this.props.onClose(modalState.id);
+      } else {
+        console.error('[ModalRoot] onClose is undefined');
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "onMaskClick", function () {
+      _this.triggerActiveModalClose();
+    });
+
+    var _activeModal = props.activeModal;
+    _this.state = {
+      activeModal: null,
+      prevModal: null,
+      nextModal: _activeModal,
+      visibleModals: _activeModal ? [_activeModal] : [],
+      animated: !!_activeModal,
+      switching: false,
+      history: _activeModal ? [_activeModal] : [],
+      isBack: false,
+      inited: false,
+      touchDown: false,
+      dragging: false
+    };
+    _this.activeTransitions = 0;
+    _this.maskElementRef = /*#__PURE__*/react.createRef();
+
+    _this.initModalsState();
+
+    _this.modalRootContext = {
+      updateModalHeight: _this.updateModalHeight
+    };
+    _this.frameIds = {};
+    return _this;
+  }
+
+  createClass(ModalRootTouch, [{
+    key: "initModalsState",
+    value: function initModalsState() {
+      this.modalsState = this.modals.reduce(function (acc, Modal) {
+        var modalProps = Modal.props;
+        var state = {
+          id: Modal.props.id,
+          onClose: Modal.props.onClose,
+          dynamicContentHeight: !!modalProps.dynamicContentHeight
+        }; // ModalPage props
+
+        if (typeof modalProps.settlingHeight === 'number') {
+          state.settlingHeight = modalProps.settlingHeight;
+        }
+
+        acc[state.id] = state;
+        return acc;
+      }, {});
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.initActiveModal();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.toggleDocumentScrolling(true);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      var _this2 = this;
+
+      if (this.props.activeModal !== prevProps.activeModal && !this.state.switching) {
+        var nextModal = this.props.activeModal;
+        var prevModal = prevProps.activeModal;
+
+        if (nextModal !== null && !this.modalsState[nextModal]) {
+          return console.warn("[ModalRoot.componentDidUpdate] nextModal ".concat(nextModal, " not found"));
+        }
+
+        var history = toConsumableArray(this.state.history);
+
+        var isBack = false;
+
+        if (nextModal === null) {
+          history = [];
+        } else if (history.includes(nextModal)) {
+          history = history.splice(0, history.indexOf(nextModal) + 1);
+          isBack = true;
+        } else {
+          history.push(nextModal);
+        }
+
+        return this.setState({
+          activeModal: null,
+          nextModal: nextModal,
+          prevModal: prevModal,
+          visibleModals: [nextModal, prevModal],
+          history: history,
+          isBack: isBack,
+          animated: true,
+          inited: false,
+          switching: false
+        }, function () {
+          if (nextModal === null) {
+            _this2.closeActiveModal();
+          } else {
+            _this2.initActiveModal();
+          }
+        });
+      }
+
+      if (this.state.switching && !prevState.switching) {
+        requestAnimationFrame(function () {
+          return _this2.switchPrevNext();
+        });
+      }
+
+      if (!this.state.activeModal && !this.state.prevModal && !this.state.nextModal) {
+        this.toggleDocumentScrolling(true);
+      } else {
+        this.toggleDocumentScrolling(false);
+      }
+    }
+  }, {
+    key: "blurActiveElement",
+    value: function blurActiveElement() {
+      if (typeof this.window !== 'undefined' && this.document.activeElement instanceof HTMLElement) {
+        this.document.activeElement.blur();
+      }
+    }
+    /* Отключает скролл документа */
+
+  }, {
+    key: "toggleDocumentScrolling",
+    value: function toggleDocumentScrolling(enabled) {
+      if (this.documentScrolling === enabled) {
+        return;
+      }
+
+      this.documentScrolling = enabled;
+
+      if (enabled) {
+        // Здесь нужен последний аргумент с такими же параметрами, потому что
+        // некоторые браузеры на странных вендорах типа Meizu не удаляют обработчик.
+        // https://github.com/VKCOM/VKUI/issues/444
+        // @ts-ignore (В интерфейсе EventListenerOptions нет поля passive)
+        this.window.removeEventListener('touchmove', this.preventTouch, {
+          passive: false
+        });
+      } else {
+        this.window.addEventListener('touchmove', this.preventTouch, {
+          passive: false
+        });
+      }
+    }
+  }, {
+    key: "pickModal",
+    value: function pickModal(modalId) {
+      return this.document.getElementById('modal-' + modalId);
+    }
+    /**
+     * Инициализирует модалку перед анимацией открытия
+     */
+
+  }, {
+    key: "initActiveModal",
+    value: function initActiveModal() {
+      var activeModal = this.state.activeModal || this.state.nextModal;
+
+      if (!activeModal) {
+        return;
+      }
+
+      var modalElement = this.pickModal(activeModal);
+      var modalState = this.modalsState[activeModal];
+
+      if (modalElement.querySelector('.ModalPage')) {
+        modalState.type = ModalType.PAGE;
+      } else if (modalElement.querySelector('.ModalCard')) {
+        modalState.type = ModalType.CARD;
+      }
+
+      switch (modalState.type) {
+        case ModalType.PAGE:
+          modalState.settlingHeight = modalState.settlingHeight || 75;
+          this.initPageModal(modalState, modalElement);
+          break;
+
+        case ModalType.CARD:
+          this.initCardModal(modalState, modalElement);
+          break;
+
+        default:
+          console.warn('[ModalRoot.initActiveModal] modalState.type is unknown');
+      }
+
+      this.setState({
+        inited: true,
+        switching: true
+      });
+    }
+  }, {
+    key: "initPageModal",
+    value: function initPageModal(modalState, modalElement) {
+      var contentElement = modalElement.querySelector('.ModalPage__content');
+      var contentHeight = contentElement.firstElementChild.offsetHeight;
+      var prevTranslateY = modalState.translateY;
+      modalState.expandable = contentHeight > contentElement.clientHeight;
+      modalState.modalElement = modalElement;
+      modalState.innerElement = modalElement.querySelector('.ModalPage__in-wrap');
+      modalState.headerElement = modalElement.querySelector('.ModalPage__header');
+      modalState.contentElement = modalElement.querySelector('.ModalPage__content');
+      modalState.footerElement = modalElement.querySelector('.ModalPage__footer');
+      var collapsed = false;
+      var expanded = false;
+      var translateYFrom;
+      var translateY;
+      var expandedRange;
+      var collapsedRange;
+      var hiddenRange;
+
+      if (modalState.expandable) {
+        translateYFrom = 100 - modalState.settlingHeight;
+        var shiftHalf = translateYFrom / 2;
+        var visiblePart = 100 - translateYFrom;
+        expandedRange = [0, shiftHalf];
+        collapsedRange = [shiftHalf, translateYFrom + visiblePart / 4];
+        hiddenRange = [translateYFrom + visiblePart / 4, 100];
+        collapsed = translateYFrom > 0;
+        expanded = translateYFrom <= 0;
+        translateY = translateYFrom;
+      } else {
+        var headerHeight = modalState.headerElement.offsetHeight;
+        var height = contentHeight + headerHeight;
+        translateYFrom = 100 - height / modalState.innerElement.parentElement.offsetHeight * 100;
+        translateY = translateYFrom;
+        expandedRange = [translateY, translateY + 25];
+        collapsedRange = [translateY + 25, translateY + 25];
+        hiddenRange = [translateY + 25, translateY + 100];
+      } // Если модалка может открываться на весь экран, и новый сдвиг больше предыдущего, то откроем её на весь экран
+
+
+      if (modalState.expandable && translateY > prevTranslateY) {
+        translateY = 0;
+      }
+
+      modalState.expandedRange = expandedRange;
+      modalState.collapsedRange = collapsedRange;
+      modalState.hiddenRange = hiddenRange;
+      modalState.translateY = translateY;
+      modalState.translateYFrom = translateYFrom;
+      modalState.collapsed = collapsed;
+      modalState.expanded = expanded;
+    }
+  }, {
+    key: "initCardModal",
+    value: function initCardModal(modalState, modalElement) {
+      modalState.modalElement = modalElement;
+      modalState.innerElement = modalElement.querySelector('.ModalCard__in');
+      modalState.translateY = 0;
+    }
+  }, {
+    key: "checkPageContentHeight",
+    value: function checkPageContentHeight() {
+      var activeModal = this.state.activeModal;
+      var modalElement = this.pickModal(activeModal);
+
+      if (modalElement) {
+        var modalState = this.modalsState[activeModal];
+
+        var prevModalState = _objectSpread$6({}, modalState);
+
+        this.initPageModal(modalState, modalElement);
+
+        var currentModalState = _objectSpread$6({}, modalState);
+
+        var needAnimate = false;
+
+        if (prevModalState.expandable === currentModalState.expandable) {
+          if (prevModalState.translateYFrom !== currentModalState.translateYFrom) {
+            needAnimate = true;
+          }
+        } else {
+          needAnimate = true;
+        }
+
+        if (needAnimate) {
+          this.animateTranslate(modalState, modalState.translateY);
+          this.animatePageHeader(modalState);
+        }
+      }
+    }
+  }, {
+    key: "closeActiveModal",
+    value: function closeActiveModal() {
+      var prevModal = this.state.prevModal;
+
+      if (!prevModal) {
+        return console.warn("[ModalRoot.closeActiveModal] prevModal is ".concat(prevModal));
+      }
+
+      var prevModalState = this.modalsState[prevModal];
+      this.waitTransitionFinish(prevModalState, this.prevNextSwitchEndHandler);
+      this.animateTranslate(prevModalState, 100);
+      this.setMaskOpacity(prevModalState, 0);
+    }
+  }, {
+    key: "onPageTouchMove",
+    value: function onPageTouchMove(event, modalState) {
+      var shiftY = event.shiftY,
+          startT = event.startT,
+          originalEvent = event.originalEvent;
+      var target = originalEvent.target;
+
+      if (!event.isY) {
+        if (target.closest('.ModalPage')) {
+          originalEvent.preventDefault();
+        }
+
+        return;
+      }
+
+      if (!target.closest('.ModalPage__in')) {
+        return originalEvent.preventDefault();
+      }
+
+      originalEvent.stopPropagation();
+      var expandable = modalState.expandable,
+          contentScrolled = modalState.contentScrolled,
+          collapsed = modalState.collapsed,
+          expanded = modalState.expanded;
+
+      if (!this.state.touchDown) {
+        modalState.touchStartTime = startT;
+        modalState.touchStartContentScrollTop = modalState.contentElement.scrollTop;
+        this.setState({
+          touchDown: true
+        });
+      }
+
+      if (contentScrolled) {
+        return;
+      }
+
+      if (modalState.touchMovePositive === null) {
+        modalState.touchMovePositive = shiftY > 0;
+      }
+
+      if (!modalState.expandable || collapsed || expanded && modalState.touchMovePositive && modalState.touchStartContentScrollTop === 0 || target.closest('.ModalPage__header')) {
+        originalEvent.preventDefault();
+
+        if (!expandable && shiftY < 0) {
+          return;
+        }
+
+        !this.state.dragging && this.setState({
+          dragging: true
+        });
+        var shiftYPercent = shiftY / this.window.innerHeight * 100;
+        var shiftYCurrent = rubber(shiftYPercent, 72, 0.8, this.props.platform === ANDROID);
+        modalState.touchShiftYPercent = shiftYPercent;
+        modalState.translateYCurrent = rangeTranslate(modalState.translateY + shiftYCurrent);
+        this.animateTranslate(modalState, modalState.translateYCurrent);
+        this.setMaskOpacity(modalState);
+      }
+    }
+  }, {
+    key: "onCardTouchMove",
+    value: function onCardTouchMove(event, modalState) {
+      var originalEvent = event.originalEvent,
+          shiftY = event.shiftY,
+          startT = event.startT;
+      var target = originalEvent.target;
+
+      if (target.closest('.ModalCard__container')) {
+        if (!this.state.touchDown) {
+          modalState.touchStartTime = startT;
+          this.setState({
+            touchDown: true,
+            dragging: true
+          });
+        }
+
+        var shiftYPercent = shiftY / modalState.innerElement.offsetHeight * 100;
+        var shiftYCurrent = rubber(shiftYPercent, 72, 1.2, this.props.platform === ANDROID);
+        modalState.touchShiftYPercent = shiftYPercent;
+        modalState.translateYCurrent = Math.max(0, modalState.translateY + shiftYCurrent);
+        this.animateTranslate(modalState, modalState.translateYCurrent);
+        this.setMaskOpacity(modalState);
+      }
+    }
+  }, {
+    key: "onPageTouchEnd",
+    value: function onPageTouchEnd(event, modalState) {
+      var _this3 = this;
+
+      var startY = event.startY,
+          shiftY = event.shiftY;
+      modalState.contentScrolled = false;
+      modalState.touchMovePositive = null;
+      var next;
+
+      if (this.state.dragging) {
+        var shiftYEndPercent = (startY + shiftY) / this.window.innerHeight * 100;
+        var translateY = modalState.translateYCurrent;
+        var expectTranslateY = translateY / (Date.now() - modalState.touchStartTime.getTime()) * 240 * 0.6 * (modalState.touchShiftYPercent < 0 ? -1 : 1);
+        translateY = rangeTranslate(translateY + expectTranslateY);
+
+        if (numberInRange(translateY, modalState.expandedRange)) {
+          translateY = modalState.expandedRange[0];
+        } else if (numberInRange(translateY, modalState.collapsedRange)) {
+          translateY = modalState.translateYFrom;
+        } else if (numberInRange(translateY, modalState.hiddenRange)) {
+          translateY = 100;
+        } else {
+          translateY = modalState.translateYFrom;
+        }
+
+        if (translateY !== 100 && shiftYEndPercent >= 75) {
+          translateY = 100;
+        }
+
+        modalState.translateY = translateY;
+        modalState.translateYCurrent = translateY;
+        modalState.collapsed = translateY > 0 && translateY < shiftYEndPercent;
+        modalState.expanded = translateY === 0;
+        modalState.hidden = translateY === 100;
+
+        if (modalState.hidden) {
+          this.doCloseModal(modalState);
+        }
+
+        next = function next() {
+          if (!modalState.hidden) {
+            _this3.animateTranslate(modalState, modalState.translateY);
+          }
+
+          _this3.setMaskOpacity(modalState);
+        };
+      }
+
+      this.setState({
+        touchDown: false,
+        dragging: false
+      }, next);
+    }
+  }, {
+    key: "onCardTouchEnd",
+    value: function onCardTouchEnd(modalState) {
+      var _this4 = this;
+
+      var next;
+
+      if (this.state.dragging) {
+        var translateY = modalState.translateYCurrent;
+        var expectTranslateY = translateY / (Date.now() - modalState.touchStartTime.getTime()) * 240 * 0.6 * (modalState.touchShiftYPercent < 0 ? -1 : 1);
+        translateY = Math.max(0, translateY + expectTranslateY);
+
+        if (translateY >= 30) {
+          translateY = 100;
+        } else {
+          translateY = 0;
+        }
+
+        modalState.translateY = translateY;
+        modalState.hidden = translateY === 100;
+
+        if (modalState.hidden) {
+          this.doCloseModal(modalState);
+        }
+
+        next = function next() {
+          if (!modalState.hidden) {
+            _this4.animateTranslate(modalState, modalState.translateY);
+          }
+
+          _this4.setMaskOpacity(modalState);
+        };
+      }
+
+      this.setState({
+        touchDown: false,
+        dragging: false
+      }, next);
+    }
+  }, {
+    key: "waitTransitionFinish",
+    value: function waitTransitionFinish(modalState, eventHandler) {
+      var onceHandler; {
+        setTimeout(eventHandler, this.props.platform === ANDROID ? 320 : 400);
+      }
+    }
+  }, {
+    key: "switchPrevNext",
+    value: function switchPrevNext() {
+      var _this5 = this;
+
+      var _this$state2 = this.state,
+          prevModal = _this$state2.prevModal,
+          nextModal = _this$state2.nextModal;
+      var prevModalState = this.modalsState[prevModal];
+      var nextModalState = this.modalsState[nextModal];
+
+      if (!prevModalState && !nextModalState) {
+        return console.warn("[ModalRoot.switchPrevNext] prevModal is ".concat(prevModal, ", nextModal is ").concat(nextModal));
+      }
+
+      var prevIsPage = !!prevModalState && prevModalState.type === ModalType.PAGE;
+      var prevIsCard = !!prevModalState && prevModalState.type === ModalType.CARD;
+      var nextIsPage = !!nextModalState && nextModalState.type === ModalType.PAGE;
+      var nextIsCard = !!nextModalState && nextModalState.type === ModalType.CARD; // Ждём полного скрытия предыдущей модалки
+
+      if (prevModalState && (nextIsCard || prevIsCard && nextIsPage)) {
+        this.waitTransitionFinish(prevModalState, function () {
+          _this5.activeTransitions += 1;
+
+          _this5.waitTransitionFinish(nextModalState, _this5.prevNextSwitchEndHandler);
+
+          _this5.animateTranslate(nextModalState, nextModalState.translateY);
+        });
+        return this.animateTranslate(prevModalState, 100);
+      }
+
+      if (prevModalState && nextIsPage) {
+        this.activeTransitions += 1;
+        this.waitTransitionFinish(prevModalState, this.prevNextSwitchEndHandler);
+
+        if (prevIsPage && prevModalState.translateY <= nextModalState.translateYFrom && !this.state.isBack) {
+          this.animateTranslate(prevModalState, nextModalState.translateYFrom + 10);
+        } else {
+          this.animateTranslate(prevModalState, 100);
+        }
+      }
+
+      this.activeTransitions += 1;
+      this.waitTransitionFinish(nextModalState, this.prevNextSwitchEndHandler);
+      this.animateTranslate(nextModalState, nextModalState.translateY);
+    }
+  }, {
+    key: "animateTranslate",
+
+    /**
+     * Анимирует сдвиг модалки
+     *
+     * @param {ModalsStateEntry} modalState
+     * @param {number} percent Процент сдвига: 0 – полностью открыта, 100 – полностью закрыта
+     */
+    value: function animateTranslate(modalState, percent) {
+      var frameId = "animateTranslateFrame".concat(modalState.id);
+      cancelAnimationFrame(this.frameIds[frameId]);
+      this.frameIds[frameId] = requestAnimationFrame(function () {
+        setTransformStyle(modalState.innerElement, "translateY(".concat(percent, "%)"));
+
+        if (modalState.type === ModalType.PAGE && modalState.footerElement) {
+          var footerHeight = modalState.footerElement.offsetHeight;
+          var factor = modalState.innerElement.offsetHeight * (percent / 100);
+          setTransformStyle(modalState.footerElement, "translateY(calc(".concat(footerHeight, "px * -").concat(factor / footerHeight, "))"));
+        }
+      });
+
+      if (modalState.type === ModalType.PAGE && modalState.expandable) {
+        this.animatePageHeader(modalState, percent);
+      }
+    }
+    /* Анимирует тень шапки */
+
+  }, {
+    key: "animatePageHeader",
+    value: function animatePageHeader(modalState) {
+      var currentPercent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      if (currentPercent === null) {
+        currentPercent = modalState.translateY;
+      }
+
+      var headerOpenPercent = currentPercent < 15 ? Math.max(0, 15 - currentPercent) / 15 : 0;
+      requestAnimationFrame(function () {
+        var headerShadow = modalState.headerElement.querySelector('.ModalPageHeader__shadow');
+
+        if (headerShadow) {
+          headerShadow.style.opacity = headerOpenPercent.toString();
+        }
+      });
+    }
+    /* Устанавливает прозрачность для полупрозрачной подложки */
+
+  }, {
+    key: "setMaskOpacity",
+    value: function setMaskOpacity(modalState) {
+      var _this6 = this;
+
+      var forceOpacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      if (forceOpacity === null && this.state.history[0] !== modalState.id) {
+        return;
+      }
+
+      cancelAnimationFrame(this.maskAnimationFrame);
+      this.maskAnimationFrame = requestAnimationFrame(function () {
+        if (_this6.maskElementRef.current) {
+          var translateY = modalState.translateY,
+              translateYCurrent = modalState.translateYCurrent;
+          var opacity = forceOpacity === null ? 1 - (translateYCurrent - translateY) / (100 - translateY) || 0 : forceOpacity;
+          _this6.maskElementRef.current.style.opacity = Math.max(0, Math.min(100, opacity)).toString();
+        }
+      });
+    }
+    /**
+     * Закрывает текущую модалку
+     */
+
+  }, {
+    key: "triggerActiveModalClose",
+    value: function triggerActiveModalClose() {
+      var activeModalState = this.modalsState[this.state.activeModal];
+
+      if (activeModalState) {
+        this.doCloseModal(activeModalState);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this7 = this;
+
+      var _this$state3 = this.state,
+          prevModal = _this$state3.prevModal,
+          activeModal = _this$state3.activeModal,
+          nextModal = _this$state3.nextModal,
+          visibleModals = _this$state3.visibleModals,
+          animated = _this$state3.animated,
+          touchDown = _this$state3.touchDown,
+          dragging = _this$state3.dragging,
+          switching = _this$state3.switching;
+
+      if (!activeModal && !prevModal && !nextModal && !animated) {
+        return null;
+      }
+
+      return /*#__PURE__*/react.createElement(TouchRootContext.Provider, {
+        value: true
+      }, /*#__PURE__*/react.createElement(ModalRootContext.Provider, {
+        value: this.modalRootContext
+      }, /*#__PURE__*/react.createElement(Touch, {
+        className: classNames(getClassname('ModalRoot', this.props.platform), {
+          'ModalRoot--vkapps': this.props.configProvider.webviewType === WebviewType.VKAPPS,
+          'ModalRoot--touched': touchDown,
+          'ModalRoot--switching': switching
+        }),
+        onMove: this.onTouchMove,
+        onEnd: this.onTouchEnd,
+        onScroll: this.onScroll
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "ModalRoot__mask",
+        onClick: this.onMaskClick,
+        ref: this.maskElementRef
+      }), /*#__PURE__*/react.createElement("div", {
+        className: "ModalRoot__viewport"
+      }, this.modals.map(function (Modal) {
+        var modalId = Modal.props.id;
+
+        if (!visibleModals.includes(Modal.props.id)) {
+          return null;
+        }
+
+        var modalState = _objectSpread$6({}, _this7.modalsState[modalId]);
+
+        var isPage = modalState.type === ModalType.PAGE;
+        var key = "modal-".concat(modalId);
+        return /*#__PURE__*/react.createElement("div", {
+          key: key,
+          id: key,
+          className: classNames('ModalRoot__modal', {
+            'ModalRoot__modal--active': modalId === activeModal,
+            'ModalRoot__modal--prev': modalId === prevModal,
+            'ModalRoot__modal--next': modalId === nextModal,
+            'ModalRoot__modal--dragging': dragging,
+            'ModalRoot__modal--expandable': isPage && modalState.expandable,
+            'ModalRoot__modal--expanded': isPage && modalState.expanded,
+            'ModalRoot__modal--collapsed': isPage && modalState.collapsed
+          })
+        }, Modal);
+      })))));
+    }
+  }, {
+    key: "document",
+    get: function get() {
+      return this.context.document || document;
+    }
+  }, {
+    key: "window",
+    get: function get() {
+      return this.context.window || window;
+    }
+  }, {
+    key: "modals",
+    get: function get() {
+      return [].concat(this.props.children);
+    }
+  }]);
+
+  return ModalRootTouch;
+}(react.Component);
+
+defineProperty(ModalRootTouch, "contextTypes", {
+  window: propTypes.any,
+  document: propTypes.any
+});
+
+var ModalRootTouch$1 = withContext(withPlatform(ModalRootTouch), ConfigProviderContext, 'configProvider');
+
+function _createSuper$8(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$8(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$8() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var ModalRootDesktop = /*#__PURE__*/function (_Component) {
+  inherits(ModalRootDesktop, _Component);
+
+  var _super = _createSuper$8(ModalRootDesktop);
+
+  function ModalRootDesktop(props) {
+    var _this;
+
+    classCallCheck(this, ModalRootDesktop);
+
+    _this = _super.call(this, props);
+
+    defineProperty(assertThisInitialized(_this), "modalsState", void 0);
+
+    defineProperty(assertThisInitialized(_this), "maskElementRef", void 0);
+
+    defineProperty(assertThisInitialized(_this), "maskAnimationFrame", void 0);
+
+    defineProperty(assertThisInitialized(_this), "modalRootContext", void 0);
+
+    defineProperty(assertThisInitialized(_this), "activeTransitions", void 0);
+
+    defineProperty(assertThisInitialized(_this), "handleKeyDownEsc", function (e) {
+      if (e.key === 'Escape') {
+        _this.triggerActiveModalClose();
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "componentWillUnmount", function () {
+      document.removeEventListener('keydown', _this.handleKeyDownEsc);
+    });
+
+    defineProperty(assertThisInitialized(_this), "updateModalHeight", function () {
+      var _this$state = _this.state,
+          activeModal = _this$state.activeModal,
+          nextModal = _this$state.nextModal;
+      var modalId = activeModal || nextModal;
+      var modalState = modalId ? _this.modalsState[modalId] : undefined;
+
+      if (modalState && modalState.type === ModalType.PAGE && modalState.dynamicContentHeight) {
+        if (_this.state.switching) {
+          _this.waitTransitionFinish(modalState, function () {
+            requestAnimationFrame(function () {
+              return _this.checkPageContentHeight();
+            });
+          });
+        } else {
+          requestAnimationFrame(function () {
+            return _this.checkPageContentHeight();
+          });
+        }
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "prevNextSwitchEndHandler", function () {
+      _this.activeTransitions = Math.max(0, _this.activeTransitions - 1);
+
+      if (_this.activeTransitions > 0) {
+        return;
+      }
+
+      var activeModal = _this.state.nextModal;
+      var newState = {
+        prevModal: null,
+        nextModal: null,
+        visibleModals: [activeModal],
+        activeModal: activeModal,
+        animated: false,
+        switching: false
+      };
+
+      if (!activeModal) {
+        newState.history = [];
+      }
+
+      _this.setState(newState);
+    });
+
+    defineProperty(assertThisInitialized(_this), "doCloseModal", function (modalState) {
+      if (isFunction(modalState.onClose)) {
+        modalState.onClose();
+      } else if (isFunction(_this.props.onClose)) {
+        _this.props.onClose(modalState.id);
+      } else {
+        console.error('[ModalRoot] onClose is undefined');
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "onMaskClick", function () {
+      _this.triggerActiveModalClose();
+    });
+
+    var _activeModal = props.activeModal;
+    _this.state = {
+      activeModal: null,
+      prevModal: null,
+      nextModal: _activeModal,
+      visibleModals: _activeModal ? [_activeModal] : [],
+      animated: !!_activeModal,
+      switching: false,
+      history: _activeModal ? [_activeModal] : [],
+      isBack: false,
+      inited: false
+    };
+    _this.maskElementRef = /*#__PURE__*/react.createRef();
+    _this.activeTransitions = 0;
+
+    _this.initModalsState();
+
+    _this.modalRootContext = {
+      updateModalHeight: _this.updateModalHeight
+    };
+    return _this;
+  }
+
+  createClass(ModalRootDesktop, [{
+    key: "initModalsState",
+    value: function initModalsState() {
+      this.modalsState = this.modals.reduce(function (acc, Modal) {
+        var modalProps = Modal.props;
+        var state = {
+          id: Modal.props.id,
+          onClose: Modal.props.onClose,
+          dynamicContentHeight: !!modalProps.dynamicContentHeight
+        }; // ModalPage props
+
+        if (typeof modalProps.settlingHeight === 'number') {
+          state.settlingHeight = modalProps.settlingHeight;
+        }
+
+        acc[state.id] = state;
+        return acc;
+      }, {});
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.initActiveModal();
+      document.addEventListener('keydown', this.handleKeyDownEsc);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      var _this2 = this;
+
+      if (this.props.activeModal !== prevProps.activeModal) {
+        var nextModal = this.props.activeModal;
+        var prevModal = prevProps.activeModal;
+
+        if (nextModal !== null && !this.modalsState[nextModal]) {
+          return console.warn("[ModalRoot.componentDidUpdate] nextModal ".concat(nextModal, " not found"));
+        }
+
+        var history = toConsumableArray(this.state.history);
+
+        var isBack = false;
+
+        if (nextModal === null) {
+          history = [];
+        } else if (history.includes(nextModal)) {
+          history = history.splice(0, history.indexOf(nextModal) + 1);
+          isBack = true;
+        } else {
+          history.push(nextModal);
+        }
+
+        return this.setState({
+          activeModal: null,
+          nextModal: nextModal,
+          prevModal: prevModal,
+          visibleModals: [nextModal, prevModal],
+          history: history,
+          isBack: isBack,
+          animated: true,
+          inited: false,
+          switching: false
+        }, function () {
+          if (nextModal === null) {
+            _this2.closeActiveModal();
+          } else {
+            _this2.initActiveModal();
+          }
+        });
+      }
+
+      if (this.state.switching && !prevState.switching) {
+        requestAnimationFrame(function () {
+          return _this2.switchPrevNext();
+        });
+      }
+    }
+  }, {
+    key: "pickModal",
+    value: function pickModal(modalId) {
+      return this.document.getElementById('modal-' + modalId);
+    }
+    /**
+     * Инициализирует модалку перед анимацией открытия
+     */
+
+  }, {
+    key: "initActiveModal",
+    value: function initActiveModal() {
+      var activeModal = this.state.activeModal || this.state.nextModal;
+
+      if (!activeModal) {
+        return;
+      }
+
+      var modalElement = this.pickModal(activeModal);
+      var modalState = this.modalsState[activeModal];
+
+      if (modalElement.querySelector('.ModalPage')) {
+        modalState.type = ModalType.PAGE;
+      } else if (modalElement.querySelector('.ModalCard')) {
+        modalState.type = ModalType.CARD;
+      }
+
+      switch (modalState.type) {
+        case ModalType.PAGE:
+          modalState.settlingHeight = modalState.settlingHeight || 75;
+          this.initPageModal(modalState, modalElement);
+          break;
+
+        case ModalType.CARD:
+          this.initCardModal(modalState, modalElement);
+          break;
+
+        default:
+          console.warn('[ModalRoot.initActiveModal] modalState.type is unknown');
+      }
+
+      this.setState({
+        inited: true,
+        switching: true
+      });
+    }
+  }, {
+    key: "initPageModal",
+    value: function initPageModal(modalState, modalElement) {
+      modalState.modalElement = modalElement;
+      modalState.innerElement = modalElement.querySelector('.ModalPage__in-wrap');
+      modalState.headerElement = modalElement.querySelector('.ModalPage__header');
+      modalState.contentElement = modalElement.querySelector('.ModalPage__content');
+      modalState.footerElement = modalElement.querySelector('.ModalPage__footer');
+    }
+  }, {
+    key: "initCardModal",
+    value: function initCardModal(modalState, modalElement) {
+      modalState.modalElement = modalElement;
+      modalState.innerElement = modalElement.querySelector('.ModalCard__in');
+    }
+  }, {
+    key: "checkPageContentHeight",
+    value: function checkPageContentHeight() {
+      var activeModal = this.state.activeModal;
+      var modalElement = this.pickModal(activeModal);
+
+      if (modalElement) {
+        var modalState = this.modalsState[activeModal];
+        this.initPageModal(modalState, modalElement);
+      }
+    }
+  }, {
+    key: "closeActiveModal",
+    value: function closeActiveModal() {
+      var prevModal = this.state.prevModal;
+
+      if (!prevModal) {
+        return console.warn("[ModalRoot.closeActiveModal] prevModal is ".concat(prevModal));
+      }
+
+      var prevModalState = this.modalsState[prevModal];
+      this.waitTransitionFinish(prevModalState, this.prevNextSwitchEndHandler);
+      this.animateModalOpacity(prevModalState, false);
+      this.setMaskOpacity(prevModalState, 0);
+    }
+  }, {
+    key: "waitTransitionFinish",
+    value: function waitTransitionFinish(modalState, eventHandler) {
+      var onceHandler; {
+        setTimeout(eventHandler, this.props.platform === ANDROID ? 320 : 400);
+      }
+    }
+  }, {
+    key: "switchPrevNext",
+    value: function switchPrevNext() {
+      var _this3 = this;
+
+      var _this$state2 = this.state,
+          prevModal = _this$state2.prevModal,
+          nextModal = _this$state2.nextModal;
+      var prevModalState = this.modalsState[prevModal];
+      var nextModalState = this.modalsState[nextModal];
+
+      if (!prevModalState && !nextModalState) {
+        return console.warn("[ModalRoot.switchPrevNext] prevModal is ".concat(prevModal, ", nextModal is ").concat(nextModal));
+      }
+
+      var prevIsCard = !!prevModalState && prevModalState.type === ModalType.CARD;
+      var nextIsPage = !!nextModalState && nextModalState.type === ModalType.PAGE;
+      var nextIsCard = !!nextModalState && nextModalState.type === ModalType.CARD; // Ждём полного скрытия предыдущей модалки
+
+      if (prevModalState && (nextIsCard || prevIsCard && nextIsPage)) {
+        this.activeTransitions += 1;
+        this.waitTransitionFinish(prevModalState, function () {
+          _this3.waitTransitionFinish(nextModalState, _this3.prevNextSwitchEndHandler);
+
+          _this3.animateModalOpacity(nextModalState, true);
+        });
+        requestAnimationFrame(function () {
+          _this3.animateModalOpacity(prevModalState, false);
+        });
+        return;
+      }
+
+      if (prevModalState && nextIsPage) {
+        this.activeTransitions += 1;
+        this.waitTransitionFinish(prevModalState, this.prevNextSwitchEndHandler);
+        requestAnimationFrame(function () {
+          _this3.animateModalOpacity(prevModalState, false);
+        });
+      }
+
+      this.activeTransitions += 1;
+      this.waitTransitionFinish(nextModalState, this.prevNextSwitchEndHandler);
+      requestAnimationFrame(function () {
+        _this3.animateModalOpacity(nextModalState, true);
+      });
+    }
+  }, {
+    key: "animateModalOpacity",
+
+    /* Анимирует сдивг модалки */
+    value: function animateModalOpacity(modalState, display) {
+      modalState.innerElement.style.opacity = display ? '1' : '0';
+    }
+    /* Анимирует тень шапки */
+
+  }, {
+    key: "animatePageHeader",
+    value: function animatePageHeader(modalState) {
+      var currentPercent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      if (currentPercent === null) {
+        currentPercent = modalState.translateY;
+      }
+
+      var headerOpenPercent = currentPercent < 15 ? Math.max(0, 15 - currentPercent) / 15 : 0;
+      requestAnimationFrame(function () {
+        var headerShadow = modalState.headerElement.querySelector('.ModalPageHeader__shadow');
+
+        if (headerShadow) {
+          headerShadow.style.opacity = headerOpenPercent.toString();
+        }
+      });
+    }
+    /* Устанавливает прозрачность для полупрозрачной подложки */
+
+  }, {
+    key: "setMaskOpacity",
+    value: function setMaskOpacity(modalState) {
+      var _this4 = this;
+
+      var forceOpacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      if (forceOpacity === null && this.state.history[0] !== modalState.id) {
+        return;
+      }
+
+      cancelAnimationFrame(this.maskAnimationFrame);
+      this.maskAnimationFrame = requestAnimationFrame(function () {
+        if (_this4.maskElementRef.current) {
+          var translateY = modalState.translateY,
+              translateYCurrent = modalState.translateYCurrent;
+          var opacity = forceOpacity === null ? 1 - (translateYCurrent - translateY) / (100 - translateY) || 0 : forceOpacity;
+          _this4.maskElementRef.current.style.opacity = Math.max(0, Math.min(100, opacity)).toString();
+        }
+      });
+    }
+    /**
+     * Закрывает текущую модалку
+     */
+
+  }, {
+    key: "triggerActiveModalClose",
+    value: function triggerActiveModalClose() {
+      var activeModalState = this.modalsState[this.state.activeModal];
+
+      if (activeModalState) {
+        this.doCloseModal(activeModalState);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$state3 = this.state,
+          prevModal = _this$state3.prevModal,
+          activeModal = _this$state3.activeModal,
+          nextModal = _this$state3.nextModal,
+          visibleModals = _this$state3.visibleModals,
+          animated = _this$state3.animated;
+
+      if (!activeModal && !prevModal && !nextModal && !animated) {
+        return null;
+      }
+
+      return /*#__PURE__*/react.createElement(ModalRootContext.Provider, {
+        value: this.modalRootContext
+      }, /*#__PURE__*/react.createElement("div", {
+        className: classNames(getClassname('ModalRoot', this.props.platform), {
+          'ModalRoot--vkapps': this.props.configProvider.webviewType === WebviewType.VKAPPS
+        })
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "ModalRoot__mask",
+        onClick: this.onMaskClick,
+        ref: this.maskElementRef
+      }), /*#__PURE__*/react.createElement("div", {
+        className: "ModalRoot__viewport"
+      }, this.modals.map(function (Modal) {
+        var modalId = Modal.props.id;
+
+        if (!visibleModals.includes(Modal.props.id)) {
+          return null;
+        }
+
+        var key = "modal-".concat(modalId);
+        return /*#__PURE__*/react.createElement("div", {
+          key: key,
+          id: key,
+          className: classNames('ModalRoot__modal', {
+            'ModalRoot__modal--active': modalId === activeModal,
+            'ModalRoot__modal--prev': modalId === prevModal,
+            'ModalRoot__modal--next': modalId === nextModal
+          })
+        }, Modal);
+      }))));
+    }
+  }, {
+    key: "document",
+    get: function get() {
+      return this.context.document || document;
+    }
+  }, {
+    key: "window",
+    get: function get() {
+      return this.context.window || window;
+    }
+  }, {
+    key: "modals",
+    get: function get() {
+      return [].concat(this.props.children);
+    }
+  }]);
+
+  return ModalRootDesktop;
+}(react.Component);
+
+defineProperty(ModalRootDesktop, "contextTypes", {
+  window: propTypes.any,
+  document: propTypes.any
+});
+
+var ModalRootDesktop$1 = withContext(withPlatform(ModalRootDesktop), ConfigProviderContext, 'configProvider');
+
+function _createSuper$9(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$9(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$9() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var ModalRoot = /*#__PURE__*/function (_Component) {
+  inherits(ModalRoot, _Component);
+
+  var _super = _createSuper$9(ModalRoot);
+
+  function ModalRoot() {
+    classCallCheck(this, ModalRoot);
+
+    return _super.apply(this, arguments);
+  }
+
+  createClass(ModalRoot, [{
+    key: "render",
+    value: function render() {
+      var viewWidth = this.props.viewWidth;
+      var isDesktop = viewWidth >= ViewWidth.TABLET;
+      var RootComponent = isDesktop ? ModalRootDesktop$1 : ModalRootTouch$1;
+      return /*#__PURE__*/react.createElement(RootComponent, this.props);
+    }
+  }]);
+
+  return ModalRoot;
+}(react.Component);
+
+var ModalRoot$1 = withAdaptivity(ModalRoot, {
+  viewWidth: true
+});
+
 var Text = function Text(_ref) {
   var children = _ref.children,
       className = _ref.className,
@@ -2897,6 +4419,163 @@ Button.defaultProps = {
 };
 var Button$1 = withAdaptivity(Button, {
   sizeY: true
+});
+
+var dismiss = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 24 24';
+var id = 'dismiss_24';
+var content = '<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="dismiss_24"><g fill="currentColor"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12z" opacity=".12" /><path d="M16.736 7.264a.9.9 0 010 1.272L13.273 12l3.463 3.464a.9.9 0 01.081 1.18l-.08.092a.9.9 0 01-1.273 0L12 13.273l-3.464 3.463a.9.9 0 11-1.272-1.272L10.727 12 7.264 8.536a.9.9 0 01-.08-1.18l.08-.092a.9.9 0 011.272 0L12 10.727l3.464-3.463a.9.9 0 011.272 0z" /></g></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon24Dismiss = function Icon24Dismiss(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 24,
+    height: !isNaN(props.height) ? +props.height : 24
+  }));
+};
+
+Icon24Dismiss.mountIcon = mountIcon;
+var _default = Icon24Dismiss;
+exports.default = _default;
+
+});
+
+var Icon24Dismiss = /*@__PURE__*/getDefaultExportFromCjs(dismiss);
+
+function _createSuper$a(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$a(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$a() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var ModalCard = /*#__PURE__*/function (_Component) {
+  inherits(ModalCard, _Component);
+
+  var _super = _createSuper$a(ModalCard);
+
+  function ModalCard() {
+    var _this;
+
+    classCallCheck(this, ModalCard);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _super.call.apply(_super, [this].concat(args));
+
+    defineProperty(assertThisInitialized(_this), "onButtonClick", function (event) {
+      var target = event.currentTarget; // eslint-disable-next-line @typescript-eslint/unbound-method
+
+      var action = _this.props.actions[Number(target.dataset.index)].action;
+
+      event.persist();
+
+      if (typeof action === 'function') {
+        action(event);
+      }
+    });
+
+    return _this;
+  }
+
+  createClass(ModalCard, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var _this$props = this.props,
+          icon = _this$props.icon,
+          header = _this$props.header,
+          caption = _this$props.caption,
+          children = _this$props.children,
+          actions = _this$props.actions,
+          actionsLayout = _this$props.actionsLayout,
+          onClose = _this$props.onClose,
+          viewWidth = _this$props.viewWidth,
+          platform = _this$props.platform,
+          className = _this$props.className;
+      var isDesktop = viewWidth >= ViewWidth.TABLET;
+      var canShowCloseBtn = platform === IOS || isDesktop;
+      return /*#__PURE__*/react.createElement("div", {
+        className: classNames(getClassname('ModalCard', platform), {
+          'ModalCard--desktop': isDesktop
+        }, className)
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "ModalCard__in"
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "ModalCard__container"
+      }, icon && /*#__PURE__*/react.createElement("div", {
+        className: "ModalCard__icon"
+      }, icon), header && /*#__PURE__*/react.createElement("div", {
+        className: "ModalCard__title"
+      }, header), caption && /*#__PURE__*/react.createElement("div", {
+        className: "ModalCard__caption"
+      }, caption), children, actions.length > 0 && /*#__PURE__*/react.createElement("div", {
+        className: classNames('ModalCard__actions', {
+          'ModalCard__actions--v': actionsLayout === 'vertical'
+        })
+      }, actions.map(function (_ref, i) {
+        var title = _ref.title,
+            mode = _ref.mode;
+        return /*#__PURE__*/react.createElement(Button$1, {
+          key: i,
+          "data-index": i,
+          size: "m",
+          mode: mode,
+          onClick: _this2.onButtonClick
+        }, title);
+      })), canShowCloseBtn && /*#__PURE__*/react.createElement(PanelHeaderButton, {
+        className: "ModalCard__dismiss",
+        onClick: onClose
+      }, /*#__PURE__*/react.createElement(Icon24Dismiss, null)))));
+    }
+  }]);
+
+  return ModalCard;
+}(react.Component);
+
+defineProperty(ModalCard, "defaultProps", {
+  actions: [],
+  actionsLayout: 'horizontal'
+});
+
+var ModalCard$1 = withAdaptivity(withPlatform(ModalCard), {
+  viewWidth: true
 });
 
 var List = function List(_ref) {
@@ -3081,9 +4760,9 @@ var Div = function Div(_ref) {
   }), children);
 };
 
-function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$7(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var Avatar = function Avatar(_ref) {
   var src = _ref.src,
@@ -3126,7 +4805,7 @@ var Avatar = function Avatar(_ref) {
   }, /*#__PURE__*/react.createElement(Component, _extends_1({}, restProps, {
     className: "Avatar__img",
     src: src,
-    style: _objectSpread$6(_objectSpread$6({}, style), {}, {
+    style: _objectSpread$7(_objectSpread$7({}, style), {}, {
       borderRadius: borderRadius
     })
   })), shadow && /*#__PURE__*/react.createElement("span", {
@@ -3521,14 +5200,14 @@ var Input$1 = withAdaptivity(Input, {
   sizeY: true
 });
 
-function _createSuper$7(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$7(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$7() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var Textarea = /*#__PURE__*/function (_PureComponent) {
   inherits(Textarea, _PureComponent);
 
-  var _super = _createSuper$7(Textarea);
+  var _super = _createSuper$b(Textarea);
 
   function Textarea(props) {
     var _this;
@@ -3896,6 +5575,140 @@ exports.default = _default;
 
 var Icon24Dropdown = /*@__PURE__*/getDefaultExportFromCjs(dropdown$2);
 
+function _createSuper$c(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$c(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$c() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var NativeSelect = /*#__PURE__*/function (_React$Component) {
+  inherits(NativeSelect, _React$Component);
+
+  var _super = _createSuper$c(NativeSelect);
+
+  function NativeSelect(props) {
+    var _this;
+
+    classCallCheck(this, NativeSelect);
+
+    _this = _super.call(this, props);
+
+    defineProperty(assertThisInitialized(_this), "isControlledOutside", void 0);
+
+    defineProperty(assertThisInitialized(_this), "selectEl", void 0);
+
+    defineProperty(assertThisInitialized(_this), "onChange", function (e) {
+      _this.setTitle();
+
+      if (!_this.isControlledOutside) {
+        _this.setState({
+          value: e.currentTarget.value
+        });
+      }
+
+      if (_this.props.onChange) {
+        _this.props.onChange(e);
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "setTitle", function () {
+      var selectedOption = _this.selectEl.options[_this.selectEl.selectedIndex];
+      selectedOption && _this.setState({
+        title: selectedOption.text,
+        notSelected: selectedOption.value === '' && _this.props.hasOwnProperty('placeholder')
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "getRef", function (element) {
+      _this.selectEl = element;
+      setRef(element, _this.props.getRef);
+    });
+
+    var state = {
+      title: '',
+      notSelected: false
+    };
+
+    if (typeof props.value !== 'undefined') {
+      _this.isControlledOutside = true;
+    } else {
+      state.value = props.defaultValue || '';
+    }
+
+    _this.state = state;
+    return _this;
+  }
+
+  createClass(NativeSelect, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (prevProps.value !== this.props.value || prevProps.children !== this.props.children) {
+        this.setTitle();
+      }
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.setTitle();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _classNames;
+
+      var _this$props = this.props,
+          style = _this$props.style,
+          value = _this$props.value,
+          defaultValue = _this$props.defaultValue,
+          onChange = _this$props.onChange,
+          align = _this$props.align,
+          status = _this$props.status,
+          placeholder = _this$props.placeholder,
+          children = _this$props.children,
+          className = _this$props.className,
+          getRef = _this$props.getRef,
+          getRootRef = _this$props.getRootRef,
+          top = _this$props.top,
+          bottom = _this$props.bottom,
+          disabled = _this$props.disabled,
+          sizeX = _this$props.sizeX,
+          sizeY = _this$props.sizeY,
+          platform = _this$props.platform,
+          restProps = objectWithoutProperties(_this$props, ["style", "value", "defaultValue", "onChange", "align", "status", "placeholder", "children", "className", "getRef", "getRootRef", "top", "bottom", "disabled", "sizeX", "sizeY", "platform"]);
+
+      return /*#__PURE__*/react.createElement(FormField, {
+        Component: "label",
+        className: classNames(getClassname('Select', platform), (_classNames = {}, defineProperty(_classNames, 'Select--not-selected', this.state.notSelected), defineProperty(_classNames, "Select--align-".concat(align), !!align), defineProperty(_classNames, "Select--sizeX--".concat(sizeX), !!sizeX), defineProperty(_classNames, "Select--sizeY--".concat(sizeY), !!sizeY), defineProperty(_classNames, 'Select--disabled', disabled), _classNames), className),
+        style: style,
+        getRootRef: getRootRef,
+        status: status
+      }, /*#__PURE__*/react.createElement("select", _extends_1({}, restProps, {
+        disabled: disabled,
+        className: "Select__el",
+        onChange: this.onChange,
+        value: this.value,
+        ref: this.getRef
+      }), placeholder && /*#__PURE__*/react.createElement("option", {
+        value: ""
+      }, placeholder), children), /*#__PURE__*/react.createElement("div", {
+        className: "Select__container"
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "Select__title"
+      }, this.state.title), sizeX === SizeType.COMPACT ? /*#__PURE__*/react.createElement(Icon16Dropdown, null) : sizeY === SizeType.COMPACT ? /*#__PURE__*/react.createElement(Icon20Dropdown, null) : /*#__PURE__*/react.createElement(Icon24Dropdown, null)));
+    }
+  }, {
+    key: "value",
+    get: function get() {
+      return this.isControlledOutside ? this.props.value : this.state.value;
+    }
+  }]);
+
+  return NativeSelect;
+}(react.Component);
+
+var NativeSelect$1 = withPlatform(withAdaptivity(NativeSelect, {
+  sizeX: true,
+  sizeY: true
+}));
+
 var SelectMimicry = function SelectMimicry(_ref) {
   var _classNames;
 
@@ -3938,6 +5751,922 @@ var SelectMimicry$1 = withAdaptivity(SelectMimicry, {
   sizeX: true,
   sizeY: true
 });
+
+function _createSuper$d(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$d(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$d() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var CustomScrollView = /*#__PURE__*/function (_React$Component) {
+  inherits(CustomScrollView, _React$Component);
+
+  var _super = _createSuper$d(CustomScrollView);
+
+  function CustomScrollView() {
+    var _this;
+
+    classCallCheck(this, CustomScrollView);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _super.call.apply(_super, [this].concat(args));
+
+    defineProperty(assertThisInitialized(_this), "ratio", NaN);
+
+    defineProperty(assertThisInitialized(_this), "lastTrackerTop", 0);
+
+    defineProperty(assertThisInitialized(_this), "clientHeight", 0);
+
+    defineProperty(assertThisInitialized(_this), "trackerHeight", 0);
+
+    defineProperty(assertThisInitialized(_this), "scrollHeight", 0);
+
+    defineProperty(assertThisInitialized(_this), "transformProp", '');
+
+    defineProperty(assertThisInitialized(_this), "startY", 0);
+
+    defineProperty(assertThisInitialized(_this), "trackerTop", 0);
+
+    defineProperty(assertThisInitialized(_this), "box", /*#__PURE__*/react.createRef());
+
+    defineProperty(assertThisInitialized(_this), "barY", /*#__PURE__*/react.createRef());
+
+    defineProperty(assertThisInitialized(_this), "trackerY", /*#__PURE__*/react.createRef());
+
+    defineProperty(assertThisInitialized(_this), "resize", function () {
+      var clientHeight = _this.box.current.clientHeight;
+      var scrollHeight = _this.box.current.scrollHeight;
+      var ratio = clientHeight / scrollHeight;
+      var trackerHeight = Math.max(clientHeight * ratio, 40);
+      _this.ratio = ratio;
+      _this.clientHeight = clientHeight;
+      _this.scrollHeight = scrollHeight;
+      _this.trackerHeight = trackerHeight;
+
+      if (ratio >= 1) {
+        _this.barY.current.style.display = 'none';
+      } else {
+        _this.barY.current.style.display = '';
+        _this.trackerY.current.style.height = "".concat(trackerHeight, "px");
+
+        _this.setTrackerPositionFromScroll(_this.box.current.scrollTop);
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "scroll", function () {
+      if (_this.ratio >= 1) {
+        return;
+      }
+
+      _this.setTrackerPositionFromScroll(_this.box.current.scrollTop);
+    });
+
+    defineProperty(assertThisInitialized(_this), "onDragStart", function (e) {
+      e.preventDefault();
+      _this.startY = e.clientY;
+      _this.trackerTop = _this.lastTrackerTop;
+      document.addEventListener('mousemove', _this.onMove);
+      document.addEventListener('mouseup', _this.onUp);
+
+      _this.trackerY.current.classList.add('CustomScrollView__trackerY--dragging');
+
+      _this.box.current.classList.add('CustomScrollView__box--dragging');
+    });
+
+    defineProperty(assertThisInitialized(_this), "onMove", function (e) {
+      e.preventDefault();
+      var diff = e.clientY - _this.startY;
+      var position = Math.min(Math.max(_this.trackerTop + diff, 0), _this.clientHeight - _this.trackerHeight);
+
+      _this.setScrollPositionFromTracker(position);
+    });
+
+    defineProperty(assertThisInitialized(_this), "onUp", function (e) {
+      e.preventDefault();
+      document.removeEventListener('mousemove', _this.onMove);
+      document.removeEventListener('mouseup', _this.onUp);
+
+      _this.trackerY.current.classList.remove('CustomScrollView__trackerY--dragging');
+
+      _this.box.current.classList.remove('CustomScrollView__box--dragging');
+    });
+
+    return _this;
+  }
+
+  createClass(CustomScrollView, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.chooseTransformProp();
+      this.resize();
+
+      if (this.props.windowResize) {
+        window.addEventListener('resize', this.resize);
+      }
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.resize();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      window.removeEventListener('resize', this.resize);
+    }
+  }, {
+    key: "chooseTransformProp",
+    value: function chooseTransformProp() {
+      var style = this.trackerY.current.style;
+      var prop = '';
+
+      if ('transform' in style) {
+        prop = 'transform';
+      } else if ('webkitTransform' in style) {
+        prop = 'webkitTransform';
+      }
+
+      this.transformProp = prop;
+    }
+  }, {
+    key: "setTrackerPosition",
+    value: function setTrackerPosition(scrollTop) {
+      this.lastTrackerTop = scrollTop;
+      this.trackerY.current.style[this.transformProp] = "translate(0, ".concat(scrollTop, "px)");
+    }
+  }, {
+    key: "setTrackerPositionFromScroll",
+    value: function setTrackerPositionFromScroll(scrollTop) {
+      var progress = scrollTop / (this.scrollHeight - this.clientHeight);
+      this.setTrackerPosition((this.clientHeight - this.trackerHeight) * progress);
+    }
+  }, {
+    key: "setScrollPositionFromTracker",
+    value: function setScrollPositionFromTracker(trackerTop) {
+      var progress = trackerTop / (this.clientHeight - this.trackerHeight);
+      this.box.current.scrollTop = (this.scrollHeight - this.clientHeight) * progress;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react.createElement("div", {
+        className: "CustomScrollView"
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "CustomScrollView__box",
+        tabIndex: -1,
+        ref: this.box,
+        onScroll: this.scroll
+      }, this.props.children), /*#__PURE__*/react.createElement("div", {
+        className: "CustomScrollView__barY",
+        ref: this.barY
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "CustomScrollView__trackerY",
+        ref: this.trackerY,
+        onMouseDown: this.onDragStart
+      })));
+    }
+  }]);
+
+  return CustomScrollView;
+}(react.Component);
+
+function _createSuper$e(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$e(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$e() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var CustomSelect = /*#__PURE__*/function (_React$Component) {
+  inherits(CustomSelect, _React$Component);
+
+  var _super = _createSuper$e(CustomSelect);
+
+  function CustomSelect(props) {
+    var _this;
+
+    classCallCheck(this, CustomSelect);
+
+    _this = _super.call(this, props);
+
+    defineProperty(assertThisInitialized(_this), "state", void 0);
+
+    defineProperty(assertThisInitialized(_this), "keyboardInput", void 0);
+
+    defineProperty(assertThisInitialized(_this), "node", void 0);
+
+    defineProperty(assertThisInitialized(_this), "scrollViewRef", /*#__PURE__*/react.createRef());
+
+    defineProperty(assertThisInitialized(_this), "resetKeyboardInput", function () {
+      _this.keyboardInput = '';
+    });
+
+    defineProperty(assertThisInitialized(_this), "getSelectedItem", function () {
+      var selectedOptionIndex = _this.state.selectedOptionIndex;
+      var options = _this.props.options;
+
+      if (!options.length) {
+        return null;
+      }
+
+      return options[selectedOptionIndex];
+    });
+
+    defineProperty(assertThisInitialized(_this), "open", function () {
+      _this.setState(function (_ref) {
+        var selectedOptionIndex = _ref.selectedOptionIndex;
+        return {
+          opened: true,
+          focusedOptionIndex: selectedOptionIndex
+        };
+      }, function () {
+        var selectedOptionIndex = _this.state.selectedOptionIndex;
+
+        if (_this.isValidIndex(selectedOptionIndex)) {
+          _this.scrollToElement(selectedOptionIndex, true);
+        }
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "close", function () {
+      _this.resetKeyboardInput();
+
+      _this.setState(function () {
+        return {
+          opened: false,
+          focusedOptionIndex: -1
+        };
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "selectFocused", function () {
+      var focusedOptionIndex = _this.state.focusedOptionIndex;
+
+      _this.select(focusedOptionIndex);
+    });
+
+    defineProperty(assertThisInitialized(_this), "select", function (index) {
+      var _this$props = _this.props,
+          onChange = _this$props.onChange,
+          name = _this$props.name,
+          options = _this$props.options;
+
+      if (!_this.isValidIndex(index)) {
+        return;
+      }
+
+      var item = options[index];
+
+      _this.setState(function () {
+        return {
+          selectedOptionIndex: index
+        };
+      });
+
+      onChange && onChange({
+        value: item.value,
+        name: name || ''
+      });
+
+      _this.close();
+    });
+
+    defineProperty(assertThisInitialized(_this), "onClick", function () {
+      _this.state.opened ? _this.close() : _this.open();
+    });
+
+    defineProperty(assertThisInitialized(_this), "onFocus", function () {
+      var onFocus = _this.props.onFocus;
+
+      _this.setState(function () {
+        return {
+          focused: true
+        };
+      });
+
+      onFocus && onFocus();
+    });
+
+    defineProperty(assertThisInitialized(_this), "onBlur", function () {
+      var onBlur = _this.props.onBlur;
+
+      _this.resetKeyboardInput();
+
+      _this.setState(function () {
+        return {
+          opened: false,
+          focused: false
+        };
+      });
+
+      onBlur && onBlur();
+    });
+
+    defineProperty(assertThisInitialized(_this), "handleDocumentClick", function (event) {
+      var thisNode = _this.node;
+
+      if (_this.state.opened && thisNode && !thisNode.contains(event.target)) {
+        _this.onBlur();
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "focusOptionByIndex", function (index) {
+      var focusedOptionIndex = _this.state.focusedOptionIndex;
+      var options = _this.props.options;
+      var oldIndex = focusedOptionIndex;
+
+      if (index < 0) {
+        index = options.length - 1;
+      } else if (index >= options.length) {
+        index = 0;
+      }
+
+      if (index === oldIndex) {
+        return;
+      }
+
+      _this.scrollToElement(index);
+
+      _this.setState(function () {
+        return {
+          focusedOptionIndex: index
+        };
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "focusOption", function (type) {
+      var focusedOptionIndex = _this.state.focusedOptionIndex;
+      var index = focusedOptionIndex;
+
+      if (type === 'next') {
+        index = focusedOptionIndex + 1;
+      } else if (type === 'prev') {
+        index = focusedOptionIndex - 1;
+      }
+
+      _this.focusOptionByIndex(index);
+    });
+
+    defineProperty(assertThisInitialized(_this), "handleOptionHover", function (e) {
+      var options = _this.props.options;
+      var label = e.currentTarget.title;
+
+      if (!label) {
+        return;
+      }
+
+      var index = options.findIndex(function (option) {
+        return option.label === label;
+      });
+
+      _this.setState(function () {
+        return {
+          focusedOptionIndex: index
+        };
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "handleOptionDown", function (e) {
+      e.preventDefault();
+    });
+
+    defineProperty(assertThisInitialized(_this), "resetFocusedOption", function () {
+      _this.setState(function () {
+        return {
+          focusedOptionIndex: -1
+        };
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "onKeyboardInput", function (key) {
+      var options = _this.props.options;
+      var fullInput = _this.keyboardInput + key;
+      var optionIndex = options.findIndex(function (option) {
+        return option.label.toLowerCase().includes(fullInput);
+      });
+
+      if (optionIndex > -1) {
+        _this.focusOptionByIndex(optionIndex);
+      }
+
+      _this.keyboardInput = fullInput;
+    });
+
+    defineProperty(assertThisInitialized(_this), "handleKeyDownSelect", function (event) {
+      var opened = _this.state.opened;
+
+      if (event.key.length === 1 && event.key !== ' ') {
+        _this.onKeyboardInput(event.key);
+
+        return;
+      }
+
+      switch (event.key) {
+        case 'ArrowUp':
+          event.preventDefault();
+          opened ? _this.focusOption('prev') : _this.open();
+          break;
+
+        case 'ArrowDown':
+          event.preventDefault();
+          opened ? _this.focusOption('next') : _this.open();
+          break;
+
+        case 'Escape':
+          event.preventDefault();
+
+          _this.close();
+
+          break;
+
+        case 'Enter':
+        case 'Spacebar':
+        case ' ':
+          event.preventDefault();
+          opened ? _this.selectFocused() : _this.open();
+          break;
+      }
+    });
+
+    defineProperty(assertThisInitialized(_this), "handleKeyUp", debounce(_this.resetKeyboardInput, 1000));
+
+    defineProperty(assertThisInitialized(_this), "renderOption", function (item, index) {
+      var _this$state = _this.state,
+          focusedOptionIndex = _this$state.focusedOptionIndex,
+          selectedOptionIndex = _this$state.selectedOptionIndex;
+      var hovered = index === focusedOptionIndex;
+      var selected = index === selectedOptionIndex;
+      return /*#__PURE__*/react.createElement("div", {
+        key: index,
+        role: "option",
+        title: item.label,
+        "aria-posinset": index,
+        "aria-selected": selected,
+        onClick: _this.selectFocused,
+        onMouseDown: _this.handleOptionDown,
+        onMouseEnter: _this.handleOptionHover,
+        className: classNames('CustomSelect__option', defineProperty({}, 'CustomSelect__option--hover', hovered))
+      }, item.label, selected && /*#__PURE__*/react.createElement("div", {
+        className: "CustomSelect__selectedIcon"
+      }, /*#__PURE__*/react.createElement(SelectedIcon, {
+        fill: "var(--accent)"
+      })));
+    });
+
+    var value = props.value;
+    _this.keyboardInput = '';
+    _this.state = {
+      opened: false,
+      focused: false,
+      focusedOptionIndex: -1,
+      selectedOptionIndex: props.options.findIndex(function (option) {
+        return option.value === value;
+      })
+    };
+    return _this;
+  }
+
+  createClass(CustomSelect, [{
+    key: "isValidIndex",
+    value: function isValidIndex(index) {
+      return index >= 0 && index < this.props.options.length;
+    }
+  }, {
+    key: "scrollToElement",
+    value: function scrollToElement(index) {
+      var center = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var scrollView = this.scrollViewRef.current;
+      var dropdown = scrollView.box.current;
+      var item = dropdown ? dropdown.children[index] : null;
+
+      if (!item) {
+        return;
+      }
+
+      var dropdownHeight = dropdown.offsetHeight;
+      var scrollTop = dropdown.scrollTop;
+      var itemTop = item.offsetTop;
+      var itemHeight = item.offsetHeight;
+
+      if (center) {
+        dropdown.scrollTop = itemTop - dropdownHeight / 2 + itemHeight / 2;
+      } else if (itemTop + itemHeight > dropdownHeight + scrollTop) {
+        dropdown.scrollTop = itemTop - dropdownHeight + itemHeight;
+      } else if (itemTop < scrollTop) {
+        dropdown.scrollTop = itemTop;
+      }
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      document.addEventListener('click', this.handleDocumentClick, false);
+      document.addEventListener('touchend', this.handleDocumentClick, false);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      document.removeEventListener('click', this.handleDocumentClick, false);
+      document.removeEventListener('touchend', this.handleDocumentClick, false);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      var _this2 = this;
+
+      if (prevProps.options !== this.props.options || prevProps.value !== this.props.value) {
+        this.setState({
+          selectedOptionIndex: this.props.options.findIndex(function (option) {
+            return option.value === _this2.props.value;
+          })
+        });
+      }
+    }
+  }, {
+    key: "renderWithCustomScrollbar",
+    value: function renderWithCustomScrollbar() {
+      var _classNames2, _classNames3;
+
+      var opened = this.state.opened;
+
+      var _this$props2 = this.props,
+          name = _this$props2.name,
+          className = _this$props2.className,
+          getRef = _this$props2.getRef,
+          popupDirection = _this$props2.popupDirection,
+          options = _this$props2.options,
+          sizeY = _this$props2.sizeY,
+          platform = _this$props2.platform,
+          onChange = _this$props2.onChange,
+          restProps = objectWithoutProperties(_this$props2, ["name", "className", "getRef", "popupDirection", "options", "sizeY", "platform", "onChange"]);
+
+      var selected = this.getSelectedItem();
+      var label = !selected ? '' : selected.label;
+      return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(SelectMimicry$1, _extends_1({}, restProps, {
+        "aria-hidden": true,
+        onClick: this.onClick,
+        onKeyDown: this.handleKeyDownSelect,
+        onKeyUp: this.handleKeyUp,
+        onFocus: this.onFocus,
+        onBlur: this.onBlur,
+        className: classNames((_classNames2 = {}, defineProperty(_classNames2, 'CustomSelect__open', opened), defineProperty(_classNames2, 'CustomSelect__open--popupDirectionTop', popupDirection === 'top'), _classNames2), className)
+      }), label), name && /*#__PURE__*/react.createElement("input", {
+        type: "hidden",
+        ref: getRef,
+        name: name,
+        value: selected ? String(selected.value) : ''
+      }), opened && /*#__PURE__*/react.createElement("div", {
+        className: classNames((_classNames3 = {}, defineProperty(_classNames3, getClassname('CustomSelect__options', platform), opened), defineProperty(_classNames3, 'CustomSelect__options--popupDirectionTop', popupDirection === 'top'), defineProperty(_classNames3, "CustomSelect__options--sizeY-".concat(sizeY), !!sizeY), _classNames3)),
+        onMouseLeave: this.resetFocusedOption
+      }, /*#__PURE__*/react.createElement(CustomScrollView, {
+        ref: this.scrollViewRef
+      }, options.map(this.renderOption))));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+
+      return /*#__PURE__*/react.createElement("div", {
+        className: "CustomSelect__container",
+        ref: function ref(node) {
+          return _this3.node = node;
+        }
+      }, this.renderWithCustomScrollbar());
+    }
+  }]);
+
+  return CustomSelect;
+}(react.Component);
+
+var CustomSelect$1 = withPlatform(withAdaptivity(CustomSelect, {
+  sizeY: true
+}));
+
+var Select = function Select(props) {
+  var nativeSelectRef = react.useRef(); // Use custom select if device has connected a mouse
+
+  if (hasMouse) {
+    var _children = props.children,
+        _getRef = props.getRef,
+        _getRootRef = props.getRootRef,
+        _restProps = objectWithoutProperties(props, ["children", "getRef", "getRootRef"]);
+
+    var _options = [];
+
+    if (Array.isArray(_children)) {
+      // filter <option> elements from children root and ignore others
+      _options = _children.filter(function (node) {
+        return /*#__PURE__*/react.isValidElement(node) && node.type === 'option';
+      }).map(function (element) {
+        var _element$props$value$, _element$props, _element$props$value, _element$props$childr, _element$props2, _element$props2$child;
+
+        var value = (_element$props$value$ = (_element$props = element.props) === null || _element$props === void 0 ? void 0 : (_element$props$value = _element$props.value) === null || _element$props$value === void 0 ? void 0 : _element$props$value.toString()) !== null && _element$props$value$ !== void 0 ? _element$props$value$ : '';
+        var label = (_element$props$childr = (_element$props2 = element.props) === null || _element$props2 === void 0 ? void 0 : (_element$props2$child = _element$props2.children) === null || _element$props2$child === void 0 ? void 0 : _element$props2$child.toString()) !== null && _element$props$childr !== void 0 ? _element$props$childr : '';
+        return {
+          value: value,
+          label: label
+        };
+      });
+    }
+
+    var value = _restProps.hasOwnProperty('value') ? _restProps.value : _restProps.defaultValue;
+    return /*#__PURE__*/react.createElement(CustomSelect$1, _extends_1({
+      options: _options,
+      getRef: _getRef,
+      getRootRef: _getRootRef,
+      value: value
+    }, _restProps));
+  }
+
+  var options = props.options,
+      children = props.children,
+      onChange = props.onChange,
+      onFocus = props.onFocus,
+      onBlur = props.onBlur,
+      getRef = props.getRef,
+      getRootRef = props.getRootRef,
+      restProps = objectWithoutProperties(props, ["options", "children", "onChange", "onFocus", "onBlur", "getRef", "getRootRef"]);
+
+  var handleFocus = function handleFocus() {
+    onFocus && onFocus();
+  };
+
+  var handleBlur = function handleBlur() {
+    onBlur && onBlur();
+  };
+
+  var handleChange = function handleChange(e) {
+    var _nativeSelectRef$curr, _nativeSelectRef$curr2, _options$selectedInde;
+
+    // values from DOM api is always strings
+    // search for value from input options if present
+    var selectedIndex = (_nativeSelectRef$curr = (_nativeSelectRef$curr2 = nativeSelectRef.current) === null || _nativeSelectRef$curr2 === void 0 ? void 0 : _nativeSelectRef$curr2.selectedIndex) !== null && _nativeSelectRef$curr !== void 0 ? _nativeSelectRef$curr : -1;
+    var value = Array.isArray(options) ? (_options$selectedInde = options[selectedIndex]) === null || _options$selectedInde === void 0 ? void 0 : _options$selectedInde.value : e.target.value;
+    onChange && onChange({
+      value: value,
+      name: e.target.name
+    });
+  };
+
+  var getRefWrapper = function getRefWrapper(element) {
+    nativeSelectRef.current = element;
+    setRef(element, getRef);
+  };
+
+  return /*#__PURE__*/react.createElement(NativeSelect$1, _extends_1({
+    onFocus: handleFocus,
+    onBlur: handleBlur,
+    onChange: handleChange,
+    getRef: getRefWrapper,
+    getRootRef: getRootRef
+  }, restProps), !!children ? children : options.map(function (_ref, key) {
+    var label = _ref.label,
+        value = _ref.value;
+    return /*#__PURE__*/react.createElement("option", {
+      value: "".concat(value),
+      key: key
+    }, label);
+  }));
+};
+
+function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$8(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _createSuper$f(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$f(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$f() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+var DefaultMonths = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
+
+var DatePicker = /*#__PURE__*/function (_Component) {
+  inherits(DatePicker, _Component);
+
+  var _super = _createSuper$f(DatePicker);
+
+  function DatePicker(props) {
+    var _this;
+
+    classCallCheck(this, DatePicker);
+
+    _this = _super.call(this, props);
+
+    defineProperty(assertThisInitialized(_this), "parseInputDate", function (date) {
+      var splited = date.split('-');
+      return {
+        day: Number(splited[2]),
+        month: Number(splited[1]),
+        year: Number(splited[0])
+      };
+    });
+
+    defineProperty(assertThisInitialized(_this), "getDaysInMonth", function (year, month) {
+      return new Date(year, month, 0).getDate();
+    });
+
+    defineProperty(assertThisInitialized(_this), "getMonthMaxDay", function () {
+      var _this$state = _this.state,
+          month = _this$state.month,
+          year = _this$state.year;
+
+      if (!month) {
+        return 31;
+      }
+
+      if (!year) {
+        return _this.getDaysInMonth(2016, month);
+      }
+
+      return _this.getDaysInMonth(year, month);
+    });
+
+    defineProperty(assertThisInitialized(_this), "getDayOptions", function () {
+      var maxMonthDay = _this.getMonthMaxDay();
+
+      var array = new Array(maxMonthDay);
+
+      for (var i = 0; i < maxMonthDay; i++) {
+        var _value = i + 1;
+
+        array[i] = {
+          label: String(_value),
+          value: _value
+        };
+      }
+
+      return array;
+    });
+
+    defineProperty(assertThisInitialized(_this), "getMonthOptions", function () {
+      var monthNames = _this.props.monthNames;
+      return (monthNames || DefaultMonths).map(function (name, index) {
+        var value = index + 1;
+        return {
+          label: name,
+          value: value
+        };
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "getYearOptions", function () {
+      var _this$props = _this.props,
+          max = _this$props.max,
+          min = _this$props.min;
+      var yearOptions = [];
+      var maxYear = max.year;
+      var minYear = min.year;
+
+      for (var _value2 = maxYear; _value2 >= minYear; _value2--) {
+        yearOptions.push({
+          label: String(_value2),
+          value: _value2
+        });
+      }
+
+      return yearOptions;
+    });
+
+    defineProperty(assertThisInitialized(_this), "onSelectChange", function (_ref) {
+      var value = _ref.value,
+          name = _ref.name;
+      var onDateChange = _this.props.onDateChange;
+
+      _this.setState(function () {
+        return defineProperty({}, name, value);
+      }, function () {
+        onDateChange && onDateChange(_this.state);
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "onStringChange", function (e) {
+      var onDateChange = _this.props.onDateChange;
+      var value = e.currentTarget.value;
+
+      var date = _this.parseInputDate(value);
+
+      _this.setState(function () {
+        return _objectSpread$8({}, date);
+      });
+
+      onDateChange && onDateChange(date);
+    });
+
+    _this.state = props.defaultValue ? props.defaultValue : {
+      day: 0,
+      month: 0,
+      year: 0
+    };
+    return _this;
+  } // Переводим state к формату гг-мм-дд
+
+
+  createClass(DatePicker, [{
+    key: "convertToInputFormat",
+    value: function convertToInputFormat(date) {
+      var day = date.day,
+          month = date.month,
+          year = date.year;
+      return "".concat(year, "-").concat(leadingZero(month), "-").concat(leadingZero(day));
+    }
+  }, {
+    key: "customView",
+    value: function customView() {
+      var _this$props2 = this.props,
+          name = _this$props2.name,
+          dayPlaceholder = _this$props2.dayPlaceholder,
+          monthPlaceholder = _this$props2.monthPlaceholder,
+          yearPlaceholder = _this$props2.yearPlaceholder,
+          popupDirection = _this$props2.popupDirection,
+          status = _this$props2.status;
+      var _this$state2 = this.state,
+          day = _this$state2.day,
+          month = _this$state2.month,
+          year = _this$state2.year;
+      return /*#__PURE__*/react.createElement("div", {
+        className: "DatePicker"
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "DatePicker__container"
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "DatePicker__day"
+      }, /*#__PURE__*/react.createElement(Select, {
+        name: "day",
+        value: day,
+        options: this.getDayOptions(),
+        status: status,
+        placeholder: dayPlaceholder,
+        popupDirection: popupDirection,
+        onChange: this.onSelectChange
+      })), /*#__PURE__*/react.createElement("div", {
+        className: "DatePicker__month"
+      }, /*#__PURE__*/react.createElement(Select, {
+        name: "month",
+        value: month,
+        options: this.getMonthOptions(),
+        status: status,
+        placeholder: monthPlaceholder,
+        popupDirection: popupDirection,
+        onChange: this.onSelectChange
+      })), /*#__PURE__*/react.createElement("div", {
+        className: "DatePicker__year"
+      }, /*#__PURE__*/react.createElement(Select, {
+        name: "year",
+        value: year,
+        options: this.getYearOptions(),
+        status: status,
+        placeholder: yearPlaceholder,
+        popupDirection: popupDirection,
+        onChange: this.onSelectChange
+      }))), /*#__PURE__*/react.createElement("input", {
+        type: "hidden",
+        name: name,
+        value: this.convertToInputFormat(this.state)
+      }));
+    }
+  }, {
+    key: "nativeView",
+    value: function nativeView() {
+      var _this$props3 = this.props,
+          top = _this$props3.top,
+          name = _this$props3.name,
+          min = _this$props3.min,
+          max = _this$props3.max,
+          status = _this$props3.status;
+      var _this$state3 = this.state,
+          day = _this$state3.day,
+          month = _this$state3.month,
+          year = _this$state3.year;
+
+      if (day && month && year) {
+        return /*#__PURE__*/react.createElement(Input$1, {
+          top: top,
+          name: name,
+          status: status,
+          type: "date",
+          defaultValue: this.convertToInputFormat(this.state),
+          onChange: this.onStringChange,
+          min: this.convertToInputFormat(min),
+          max: this.convertToInputFormat(max)
+        });
+      }
+
+      return /*#__PURE__*/react.createElement(Input$1, {
+        top: top,
+        name: name,
+        status: status,
+        type: "date",
+        onChange: this.onStringChange,
+        min: this.convertToInputFormat(min),
+        max: this.convertToInputFormat(max)
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return hasMouse ? this.customView() : this.nativeView();
+    }
+  }]);
+
+  return DatePicker;
+}(react.Component);
+
+var DatePicker$1 = withAdaptivity(DatePicker, {});
 
 var chevron_back = createCommonjsModule(function (module, exports) {
 
@@ -4060,4 +6789,4 @@ var PanelHeaderBack = function PanelHeaderBack(props) {
 
 var PanelHeaderBack$1 = /*#__PURE__*/react.memo(PanelHeaderBack);
 
-export { ANDROID, Avatar, Banner, Button$1 as Button, Div, FormLayout, FormLayoutGroup, IOS, Input$1 as Input, List, Panel$1 as Panel, PanelHeader$1 as PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, Placeholder, Progress, Radio$1 as Radio, Root$1 as Root, SelectMimicry$1 as SelectMimicry, Separator$1 as Separator, SimpleCell$1 as SimpleCell, Tappable$1 as Tappable, Text, Textarea$1 as Textarea, Title, View$1 as View, classNames, getClassname as getClassName, usePlatform, withPlatform };
+export { ANDROID, Avatar, Banner, Button$1 as Button, DatePicker$1 as DatePicker, Div, FormLayout, FormLayoutGroup, IOS, Input$1 as Input, List, ModalCard$1 as ModalCard, ModalRoot$1 as ModalRoot, Panel$1 as Panel, PanelHeader$1 as PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, Placeholder, Progress, Radio$1 as Radio, Root$1 as Root, SelectMimicry$1 as SelectMimicry, Separator$1 as Separator, SimpleCell$1 as SimpleCell, Tappable$1 as Tappable, Text, Textarea$1 as Textarea, Title, View$1 as View, classNames, getClassname as getClassName, usePlatform, withPlatform };

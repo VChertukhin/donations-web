@@ -1,10 +1,11 @@
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 import React from '../../web_modules/react.js';
-import { View, Panel, PanelHeader, Placeholder, Button, PanelHeaderBack, Banner, Div, FormLayout, Input, Textarea, SelectMimicry, FormLayoutGroup, Radio, List, SimpleCell, Avatar } from '../../web_modules/@vkontakte/vkui.js';
+import { View, Panel, PanelHeader, Placeholder, Button, PanelHeaderBack, Banner, Div, FormLayout, Input, Textarea, SelectMimicry, FormLayoutGroup, Radio, List, SimpleCell, Avatar, DatePicker, ModalRoot, ModalCard } from '../../web_modules/@vkontakte/vkui.js';
 import { Icon28TargetOutline, Icon28CalendarOutline, Icon28PictureOutline, Icon24Done } from '../../web_modules/@vkontakte/icons.js';
 import CoverLoader from '../components/CoverLoader/CoverLoader.js';
 import SnippetDonation from '../components/SnippetDonation/SnippetDonation.js';
+import { todayDate, dateFormat } from '../lib.js';
 const defaultAuthors = [{
   id: 150337771,
   name: 'Матвей Правосудов',
@@ -50,11 +51,38 @@ export class Creating extends React.Component {
       });
     });
 
+    _defineProperty(this, "choseDate", () => {
+      this.setState({
+        activeModal: null
+      });
+    });
+
+    _defineProperty(this, "choseDonationEnd", when => {
+      switch (when) {
+        case 'date':
+          this.setState({
+            donationEnd: when
+          });
+          break;
+
+        case 'amount':
+          this.setState({
+            donationEnd: when,
+            date: undefined
+          });
+          break;
+      }
+    });
+
     this.state = {
+      activeModal: null,
+      donationEnd: 'date',
       donation: props.donation || defaultDonationRegular
     };
     this.create = this.create.bind(this);
     this.choseAuthor = this.choseAuthor.bind(this);
+    this.choseDate = this.choseDate.bind(this);
+    this.choseDonationEnd = this.choseDonationEnd.bind(this);
   }
 
   choseAuthor(user) {
@@ -87,12 +115,6 @@ export class Creating extends React.Component {
     }
   }
 
-  createTarget() {
-    this.setState({
-      donation: defaultDonationTarget
-    });
-  }
-
   render() {
     const {
       id,
@@ -103,11 +125,54 @@ export class Creating extends React.Component {
       updateDonation
     } = this.props;
     const {
+      activeModal,
+      date,
+      donationEnd,
       donation
     } = this.state;
+    const modal = /*#__PURE__*/React.createElement(ModalRoot, {
+      activeModal: activeModal
+    }, /*#__PURE__*/React.createElement(ModalCard, {
+      id: "date",
+      onClose: () => {
+        this.setState({
+          date: undefined
+        });
+        this.choseDate();
+      },
+      header: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443",
+      actions: [{
+        title: 'Выбрать',
+        mode: 'primary',
+        action: () => {
+          this.choseDate();
+        }
+      }]
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 12
+      }
+    }, /*#__PURE__*/React.createElement(DatePicker, {
+      top: "\u0414\u0430\u0442\u0430 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F",
+      placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443",
+      min: todayDate(),
+      max: {
+        day: 1,
+        month: 1,
+        year: 2037
+      },
+      dayPlaceholder: "\u0414\u0435\u043D\u044C",
+      monthPlaceholder: "\u041C\u0435\u0441\u044F\u0446",
+      yearPlaceholder: "\u0413\u043E\u0434",
+      popupDirection: "top",
+      onDateChange: d => this.setState({
+        date: d
+      })
+    }))));
     return /*#__PURE__*/React.createElement(View, {
       id: id,
-      activePanel: activePanel
+      activePanel: activePanel,
+      modal: modal
     }, /*#__PURE__*/React.createElement(Panel, {
       id: "main"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
@@ -224,17 +289,25 @@ export class Creating extends React.Component {
     }, donation.author.name), /*#__PURE__*/React.createElement(FormLayoutGroup, {
       top: "\u0421\u0431\u043E\u0440 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0441\u044F"
     }, /*#__PURE__*/React.createElement(Radio, {
-      name: "type"
+      name: "type",
+      value: "amount",
+      checked: donationEnd === 'amount',
+      onChange: e => e.target.value === 'amount' && this.choseDonationEnd('amount')
     }, "\u041A\u043E\u0433\u0434\u0430 \u0441\u043E\u0431\u0435\u0440\u0435\u043C \u0441\u0443\u043C\u043C\u0443"), /*#__PURE__*/React.createElement(Radio, {
       style: {
         marginTop: 0
       },
       name: "type",
-      defaultChecked: true
-    }, "\u0412 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0443\u044E \u0434\u0430\u0442\u0443")), /*#__PURE__*/React.createElement(SelectMimicry, {
+      value: "date",
+      checked: donationEnd === 'date',
+      onChange: e => e.target.value === 'date' && this.choseDonationEnd('date')
+    }, "\u0412 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0443\u044E \u0434\u0430\u0442\u0443")), donationEnd === 'date' && /*#__PURE__*/React.createElement(SelectMimicry, {
       top: "\u0414\u0430\u0442\u0430 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F",
-      placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443"
-    })), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
+      placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443",
+      onClick: () => this.setState({
+        activeModal: 'date'
+      })
+    }, date && dateFormat(date))), /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
       size: "l",
       stretched: true,
       onClick: () => setPanel('posting')
