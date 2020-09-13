@@ -81,6 +81,7 @@ class CoverLoader extends Component {
     }, restProps, {
       className: "CoverLoader__input",
       type: "file",
+      accept: "image/*",
       ref: getRef,
       onChange: this.change
     })), /*#__PURE__*/React.createElement("div", {
