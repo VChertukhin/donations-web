@@ -7,15 +7,6 @@ import { Viewing } from './views/Viewing.js';
 import { Main } from './views/Main.js';
 import { Creating } from './views/Creating.js';
 import { Newsfeed } from './views/Newsfeed.js';
-const authors = [{
-  id: 150337771,
-  name: 'Матвей Правосудов',
-  photo_100: 'https://sun9-39.userapi.com/impf/c639623/v639623662/4d9db/HVnCQZZ0dJQ.jpg?size=100x0&quality=88&crop=677,325,1354,1354&sign=fb6648ed604b90d8ddba864f45d0aae9&c_uniq_tag=Fbfu_i2o13FAWIkgTXQYCRYBazI8QsiYCbjqktcZpbk&ava=1'
-}, {
-  id: -197700721,
-  name: 'Вездекод | Хакатон ВКонтакте',
-  photo_100: 'https://sun9-76.userapi.com/impg/e05bG7K5clW9_qVhE4FQCeYOnTHFTopoNhVH8g/bNJz6lwiUKs.jpg?size=100x0&quality=88&crop=0,0,800,800&sign=691aa9921163e0f1329b4f30900fd5b0&c_uniq_tag=ZuLyWUaJuOdvX7yQMU6PxVu7M356mxmSNXjUNbbWsPI&ava=1'
-}];
 export class App extends React.Component {
   constructor(props) {
     super(props);
@@ -112,23 +103,23 @@ export class App extends React.Component {
     }, /*#__PURE__*/React.createElement(Main, {
       id: "main",
       activePanel: activePanel['main'],
-      setView: this.setView
+      setView: (view, name) => this.setView(view, name)
     }), /*#__PURE__*/React.createElement(Creating, {
       id: "creating",
       activePanel: activePanel['creating'],
-      setView: this.setView,
-      setPanel: this.setPanel,
-      goBack: this.goBack,
-      updateDonation: this.updateDonation
+      setView: (view, name) => this.setView(view, name),
+      setPanel: name => this.setPanel(name),
+      goBack: () => this.goBack(),
+      updateDonation: d => this.updateDonation(d)
     }), /*#__PURE__*/React.createElement(Newsfeed, {
       id: "newsfeed",
-      setView: this.setView,
-      goBack: this.goBack,
+      setView: (view, name) => this.setView(view, name),
+      goBack: () => this.goBack(),
       donation: donation
     }), /*#__PURE__*/React.createElement(Viewing, {
       id: "viewing",
       donation: donation,
-      goBack: this.goBack
+      goBack: () => this.goBack()
     }));
   }
 
