@@ -1,4 +1,4 @@
-import { c as createCommonjsModule, a as commonjsGlobal } from './index-f6a4afc8.js';
+import { c as createCommonjsModule, a as commonjsGlobal } from './index-2cd4dd6b.js';
 
 var browserSymbol = createCommonjsModule(function (module, exports) {
 (function (global, factory) {
