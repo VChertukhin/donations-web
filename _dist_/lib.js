@@ -26,7 +26,7 @@ const achievementTypes = {
 };
 export const achievementDescription = achievement => {
   if (achievement.type === 'amount') {
-    return moneyFormat(achievement.min) + ' ₽';
+    return `от ${moneyFormat(achievement.min)} ₽`;
   }
 
   return achievementTypes[achievement.type];
