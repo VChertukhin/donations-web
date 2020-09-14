@@ -104,6 +104,23 @@ export class Creating extends React.Component {
       }
     });
 
+    _defineProperty(this, "getModalDefault", () => {
+      const {
+        date
+      } = this.state;
+
+      if (date) {
+        return date;
+      } else {
+        const currDate = new Date();
+        return {
+          day: currDate.getDate(),
+          month: currDate.getMonth() + 1,
+          year: currDate.getFullYear()
+        };
+      }
+    });
+
     this.state = {
       activeModal: null,
       groups: [],
@@ -209,7 +226,7 @@ export class Creating extends React.Component {
       id: "date",
       onClose: () => {
         this.setState({
-          date: undefined
+          date: this.getModalDefault()
         });
         this.choseDate();
       },
@@ -218,6 +235,15 @@ export class Creating extends React.Component {
         title: 'Выбрать',
         mode: 'primary',
         action: () => {
+          this.setState(prevState => {
+            if (!prevState.date) {
+              return { ...prevState,
+                date: this.getModalDefault()
+              };
+            } else {
+              return prevState;
+            }
+          });
           this.choseDate();
         }
       }]
@@ -228,6 +254,7 @@ export class Creating extends React.Component {
     }, /*#__PURE__*/React.createElement(DatePicker, {
       top: "\u0414\u0430\u0442\u0430 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F",
       placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443",
+      defaultValue: this.getModalDefault(),
       min: todayDate(),
       max: {
         day: 1,
@@ -245,6 +272,8 @@ export class Creating extends React.Component {
             date
           });
         }
+
+        console.log(date);
       }
     }))));
     return /*#__PURE__*/React.createElement(View, {
