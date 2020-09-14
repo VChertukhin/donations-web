@@ -484,7 +484,7 @@ export class Creating extends React.Component {
       onBlur: () => this.setState({
         highlightErrors: false
       })
-    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440")))), /*#__PURE__*/React.createElement(Panel, {
+    }, "\u0414\u0430\u043B\u0435\u0435")))), /*#__PURE__*/React.createElement(Panel, {
       id: "regular"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
       separator: false,
@@ -588,7 +588,7 @@ export class Creating extends React.Component {
       onBlur: () => this.setState({
         highlightErrors: false
       })
-    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440")))), /*#__PURE__*/React.createElement(Panel, {
+    }, "\u0414\u0430\u043B\u0435\u0435")))), /*#__PURE__*/React.createElement(Panel, {
       id: "author"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
       left: /*#__PURE__*/React.createElement(PanelHeaderBack, {
