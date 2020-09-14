@@ -1,6 +1,7 @@
 import React from '../web_modules/react.js';
 import { Root } from '../web_modules/@vkontakte/vkui.js';
 import '../web_modules/@vkontakte/vkui/dist/vkui.css.proxy.js';
+import './views/Creating.css.proxy.js';
 import './components/SnippetDonation/SnippetDonation.css.proxy.js';
 import './components/CoverLoader/CoverLoader.css.proxy.js';
 import './components/ViewState/ViewState.css.proxy.js';

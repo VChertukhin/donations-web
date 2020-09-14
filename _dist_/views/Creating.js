@@ -300,7 +300,7 @@ export class Creating extends React.Component {
       }
     }, /*#__PURE__*/React.createElement(CoverLoader, {
       error: highlightErrors && !donation.image,
-      errorText: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
+      errorText: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       before: /*#__PURE__*/React.createElement(Icon28PictureOutline, null),
       image: donation.image,
@@ -312,7 +312,7 @@ export class Creating extends React.Component {
       })
     })), /*#__PURE__*/React.createElement(FormLayout, null, /*#__PURE__*/React.createElement(Input, {
       top: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
-      bottom: highlightErrors && !donation.title ? 'Пожалуйста введите название сбора' : '',
+      bottom: highlightErrors && !donation.title ? 'Пожалуйста, введите название сбора' : '',
       status: highlightErrors && !donation.title ? 'error' : 'default',
       placeholder: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
       value: donation.title,
@@ -322,8 +322,9 @@ export class Creating extends React.Component {
     }), /*#__PURE__*/React.createElement(Input, {
       pattern: "[0-9]*",
       top: "\u0421\u0443\u043C\u043C\u0430, \u20BD",
-      bottom: highlightErrors && !donation.need ? 'Пожалуйста введите сумму\n(должна быть больше нуля)' : '',
+      bottom: highlightErrors && !donation.need ? 'Пожалуйста, введите сумму\n(должна быть больше нуля)' : '',
       status: highlightErrors && !donation.need ? 'error' : 'default',
+      type: "number",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0441\u043E\u0431\u0440\u0430\u0442\u044C?",
       value: donation.need || '',
       onChange: e => {
@@ -341,7 +342,7 @@ export class Creating extends React.Component {
       }
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0426\u0435\u043B\u044C",
-      bottom: highlightErrors && !donation.target ? 'Пожалуйста введите цель' : '',
+      bottom: highlightErrors && !donation.target ? 'Пожалуйста, введите цель' : '',
       status: highlightErrors && !donation.target ? 'error' : 'default',
       placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430",
       value: donation.target,
@@ -350,7 +351,7 @@ export class Creating extends React.Component {
       })
     }), /*#__PURE__*/React.createElement(Textarea, {
       top: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435",
-      bottom: highlightErrors && !donation.description ? 'Пожалуйста введите описание' : '',
+      bottom: highlightErrors && !donation.description ? 'Пожалуйста, введите описание' : '',
       status: highlightErrors && !donation.description ? 'error' : 'default',
       placeholder: "\u041D\u0430 \u0447\u0442\u043E \u043F\u043E\u0439\u0434\u0443\u0442 \u0434\u0435\u043D\u044C\u0433\u0438 \u0438 \u043A\u0430\u043A \u043E\u043D\u0438 \u043F\u043E\u043C\u043E\u0433\u0443\u0442?",
       value: donation.description,
@@ -412,7 +413,7 @@ export class Creating extends React.Component {
       onChange: e => e.target.value === 'date' && this.choseDonationEnd('date')
     }, "\u0412 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0443\u044E \u0434\u0430\u0442\u0443")), donationEnd === 'date' && /*#__PURE__*/React.createElement(SelectMimicry, {
       top: "\u0414\u0430\u0442\u0430 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F",
-      bottom: highlightErrors && !date ? 'Пожалуйста выберите дату' : '',
+      bottom: highlightErrors && !date ? 'Пожалуйста, выберите дату' : '',
       status: highlightErrors && !date ? 'error' : 'default',
       placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443",
       onClick: () => this.setState({
@@ -462,7 +463,7 @@ export class Creating extends React.Component {
       }
     }, /*#__PURE__*/React.createElement(CoverLoader, {
       error: highlightErrors && !donation.image,
-      errorText: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
+      errorText: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       before: /*#__PURE__*/React.createElement(Icon28PictureOutline, null),
       image: donation.image,
@@ -474,7 +475,7 @@ export class Creating extends React.Component {
       })
     })), /*#__PURE__*/React.createElement(FormLayout, null, /*#__PURE__*/React.createElement(Input, {
       top: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
-      bottom: highlightErrors && !donation.title ? 'Пожалуйста введите название сбора' : '',
+      bottom: highlightErrors && !donation.title ? 'Пожалуйста, введите название сбора' : '',
       status: highlightErrors && !donation.title ? 'error' : 'default',
       placeholder: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
       value: donation.title,
@@ -483,9 +484,10 @@ export class Creating extends React.Component {
       })
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0421\u0443\u043C\u043C\u0430 \u0432 \u043C\u0435\u0441\u044F\u0446, \u20BD",
-      bottom: highlightErrors && !donation.need ? 'Пожалуйста введите сумму\n(должна быть больше нуля)' : '',
+      bottom: highlightErrors && !donation.need ? 'Пожалуйста, введите сумму\n(должна быть больше нуля)' : '',
       status: highlightErrors && !donation.need ? 'error' : 'default',
       pattern: "[0-9]*",
+      type: "number",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0432 \u043C\u0435\u0441\u044F\u0446?",
       value: donation.need || '',
       onChange: e => {
@@ -503,7 +505,7 @@ export class Creating extends React.Component {
       }
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0426\u0435\u043B\u044C",
-      bottom: highlightErrors && !donation.target ? 'Пожалуйста введите цель сбора' : '',
+      bottom: highlightErrors && !donation.target ? 'Пожалуйста, введите цель сбора' : '',
       status: highlightErrors && !donation.target ? 'error' : 'default',
       placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u043F\u0440\u0438\u044E\u0442\u0430",
       value: donation.target,
@@ -512,7 +514,7 @@ export class Creating extends React.Component {
       })
     }), /*#__PURE__*/React.createElement(Textarea, {
       top: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435",
-      bottom: highlightErrors && !donation.description ? 'Пожалуйста введите описание сбора' : '',
+      bottom: highlightErrors && !donation.description ? 'Пожалуйста, введите описание сбора' : '',
       status: highlightErrors && !donation.description ? 'error' : 'default',
       placeholder: "\u041D\u0430 \u0447\u0442\u043E \u043F\u043E\u0439\u0434\u0443\u0442 \u0434\u0435\u043D\u044C\u0433\u0438 \u0438 \u043A\u0430\u043A \u043E\u043D\u0438 \u043F\u043E\u043C\u043E\u0433\u0443\u0442?",
       value: donation.description,
