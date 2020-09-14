@@ -21,7 +21,8 @@ export class App extends React.Component {
       history: [{
         view: 'main',
         panel: 'main'
-      }]
+      }],
+      postText: ''
     };
     this.setView = this.setView.bind(this);
     this.setPanel = this.setPanel.bind(this);
@@ -112,7 +113,8 @@ export class App extends React.Component {
       activeView,
       activePanel,
       donation,
-      userInfo
+      userInfo,
+      postText
     } = this.state;
     return /*#__PURE__*/React.createElement(Root, {
       activeView: activeView
@@ -128,9 +130,11 @@ export class App extends React.Component {
       setPanel: name => this.setPanel(name),
       goBack: () => this.goBack(),
       updateDonation: d => this.updateDonation(d),
-      userInfo: userInfo
+      userInfo: userInfo // setPostText={(t)=>this.setState({postText:t})}
+
     }), /*#__PURE__*/React.createElement(Newsfeed, {
       id: "newsfeed",
+      postText: postText,
       setView: (view, name) => this.setView(view, name),
       goBack: () => this.goBack(),
       donation: donation

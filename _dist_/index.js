@@ -6,6 +6,8 @@ import ReactDOM from '../web_modules/react-dom.js';
 import { App } from './App.js';
 import { VKMiniAppAPI } from '../web_modules/@vkontakte/vk-mini-apps-api.js';
 import bridge from '../web_modules/@vkontakte/vk-bridge.js';
+import './components/Post/Post.css.proxy.js';
+import './components/CardDivider/CardDivider.css.proxy.js';
 
 const isMobileApps = () => {
   const url = new URL(window.location.href);
