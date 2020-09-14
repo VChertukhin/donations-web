@@ -17,10 +17,16 @@ export class Main extends React.Component {
       id: id,
       activePanel: activePanel
     }, /*#__PURE__*/React.createElement(Panel, {
-      id: "main"
+      id: "main",
+      style: {
+        overflow: 'hidden'
+      }
     }, /*#__PURE__*/React.createElement(PanelHeader, {
       separator: true
     }, "\u041F\u043E\u0436\u0435\u0440\u0442\u0432\u043E\u0432\u0430\u043D\u0438\u044F"), /*#__PURE__*/React.createElement(Placeholder, {
+      style: {
+        background: 'transparent'
+      },
       action: /*#__PURE__*/React.createElement(Button, {
         size: "m",
         onClick: () => setView('creating')
