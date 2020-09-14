@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from '../../../web_modules/react.js';
 import { Separator, Text, Div, Header, Group, CardGrid, Card } from '../../../web_modules/@vkontakte/vkui.js';
 import { moneyFormat } from '../../lib.js';
-
-const StateProgress = ({
+export const StateProgress = ({
   label,
   donationProgress,
   donationNeed
 }) => {
+  donationProgress = donationProgress || 0;
   const progress = Math.floor(donationProgress * 100 / donationNeed);
 
   const formattedNumber = num => `${moneyFormat(num)} ₽`;
@@ -53,6 +53,24 @@ const StateProgress = ({
     weight: "semibold",
     className: "bar-inner-text"
   }, formattedNumber(donationProgress) + ' собраны!')))));
+};
+export const StateProgressWithAnimation = ({
+  label,
+  donationNeed
+}) => {
+  const [donationProgress, setDonationProgress] = useState(donationNeed);
+  useEffect(() => {
+    if (donationProgress < donationNeed) {
+      setTimeout(() => setDonationProgress(prevProgress => prevProgress + donationNeed * 0.0025), 70);
+    } else {
+      setDonationProgress(0);
+    }
+  });
+  return /*#__PURE__*/React.createElement(StateProgress, {
+    label: label,
+    donationNeed: donationNeed,
+    donationProgress: donationProgress
+  });
 };
 
 const ViewState = () => {
