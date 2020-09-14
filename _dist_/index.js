@@ -7,8 +7,8 @@ import { App } from './App.js';
 import { VKMiniAppAPI } from '../web_modules/@vkontakte/vk-mini-apps-api.js';
 import bridge from '../web_modules/@vkontakte/vk-bridge.js';
 import './components/CardDivider/CardDivider.css.proxy.js';
-import './components/CoverLoader/CoverLoader.css.proxy.js';
-import './components/Post/Post.css.proxy.js';
+import './components/CoverLoader/CoverLoader.css.proxy.js'; // import './components/Post/Post.css';
+
 import './components/PostBar/PostBar.css.proxy.js';
 import './components/SnippetDonation/SnippetDonation.css.proxy.js';
 import './components/ViewState/ViewState.css.proxy.js';
