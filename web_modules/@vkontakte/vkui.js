@@ -4578,6 +4578,110 @@ var ModalCard$1 = withAdaptivity(withPlatform(ModalCard), {
   viewWidth: true
 });
 
+var Card = function Card(_ref) {
+  var size = _ref.size,
+      mode = _ref.mode,
+      children = _ref.children,
+      style = _ref.style,
+      className = _ref.className,
+      restProps = objectWithoutProperties(_ref, ["size", "mode", "children", "style", "className"]);
+
+  var platform = usePlatform();
+  return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
+    style: style,
+    className: classNames(className, getClassname('Card', platform), "Card--sz-".concat(size), "Card--md-".concat(mode))
+  }), /*#__PURE__*/react.createElement("div", {
+    className: "Card__in"
+  }, children));
+};
+
+Card.defaultProps = {
+  size: 'm',
+  mode: 'tint'
+};
+
+var CardGrid = function CardGrid(_ref) {
+  var children = _ref.children,
+      className = _ref.className,
+      style = _ref.style,
+      restProps = objectWithoutProperties(_ref, ["children", "className", "style"]);
+
+  var platform = usePlatform();
+  return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
+    style: style,
+    className: classNames(className, getClassname('CardGrid', platform))
+  }), children);
+};
+
+var Header = function Header(_ref) {
+  var className = _ref.className,
+      mode = _ref.mode,
+      children = _ref.children,
+      subtitle = _ref.subtitle,
+      indicator = _ref.indicator,
+      aside = _ref.aside,
+      getRootRef = _ref.getRootRef,
+      restProps = objectWithoutProperties(_ref, ["className", "mode", "children", "subtitle", "indicator", "aside", "getRootRef"]);
+
+  var platform = usePlatform();
+  var baseClassNames = getClassname('Header', platform);
+  return /*#__PURE__*/react.createElement("div", _extends_1({}, restProps, {
+    ref: getRootRef,
+    className: classNames(baseClassNames, className, "Header--mode-".concat(mode), {
+      'Header--pi': typeof indicator === 'string' || typeof indicator === 'number'
+    })
+  }), /*#__PURE__*/react.createElement("div", {
+    className: "Header__in"
+  }, /*#__PURE__*/react.createElement("div", {
+    className: "Header__content"
+  }, children, subtitle && /*#__PURE__*/react.createElement("div", {
+    className: "Header__subtitle"
+  }, subtitle)), indicator && /*#__PURE__*/react.createElement("div", {
+    className: "Header__indicator"
+  }, indicator), aside && /*#__PURE__*/react.createElement("div", {
+    className: "Header__aside"
+  }, aside)));
+};
+
+Header.defaultProps = {
+  mode: 'primary'
+};
+
+var Group = function Group(props) {
+  var header = props.header,
+      description = props.description,
+      className = props.className,
+      children = props.children,
+      separator = props.separator,
+      getRootRef = props.getRootRef,
+      sizeX = props.sizeX,
+      restProps = objectWithoutProperties(props, ["header", "description", "className", "children", "separator", "getRootRef", "sizeX"]);
+
+  var platform = usePlatform();
+  var baseClassNames = getClassname('Group', platform);
+  return /*#__PURE__*/react.createElement("section", _extends_1({}, restProps, {
+    ref: getRootRef,
+    className: classNames(baseClassNames, className)
+  }), /*#__PURE__*/react.createElement("div", {
+    className: classNames('Group__inner', "Group__inner--sizeX-".concat(sizeX))
+  }, header, children, description && /*#__PURE__*/react.createElement("div", {
+    className: "Group__description"
+  }, description)), separator !== 'hide' && /*#__PURE__*/react.createElement(Separator$1, {
+    className: classNames('Group__separator', {
+      'Group__separator--force': separator === 'show'
+    }),
+    expanded: sizeX === SizeType.REGULAR
+  }));
+};
+
+Group.defaultProps = {
+  separator: 'auto'
+};
+Group = withAdaptivity(Group, {
+  sizeX: true
+});
+var Group$1 = Group;
+
 var List = function List(_ref) {
   var className = _ref.className,
       children = _ref.children,
@@ -6789,4 +6893,4 @@ var PanelHeaderBack = function PanelHeaderBack(props) {
 
 var PanelHeaderBack$1 = /*#__PURE__*/react.memo(PanelHeaderBack);
 
-export { ANDROID, Avatar, Banner, Button$1 as Button, DatePicker$1 as DatePicker, Div, FixedLayout$1 as FixedLayout, FormLayout, FormLayoutGroup, IOS, Input$1 as Input, List, ModalCard$1 as ModalCard, ModalRoot$1 as ModalRoot, Panel$1 as Panel, PanelHeader$1 as PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, Placeholder, Progress, Radio$1 as Radio, Root$1 as Root, SelectMimicry$1 as SelectMimicry, Separator$1 as Separator, SimpleCell$1 as SimpleCell, Tappable$1 as Tappable, Text, Textarea$1 as Textarea, Title, View$1 as View, classNames, getClassname as getClassName, usePlatform, withPlatform };
+export { ANDROID, Avatar, Banner, Button$1 as Button, Card, CardGrid, DatePicker$1 as DatePicker, Div, FixedLayout$1 as FixedLayout, FormLayout, FormLayoutGroup, Group$1 as Group, Header, IOS, Input$1 as Input, List, ModalCard$1 as ModalCard, ModalRoot$1 as ModalRoot, Panel$1 as Panel, PanelHeader$1 as PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, Placeholder, Progress, Radio$1 as Radio, Root$1 as Root, SelectMimicry$1 as SelectMimicry, Separator$1 as Separator, SimpleCell$1 as SimpleCell, Tappable$1 as Tappable, Text, Textarea$1 as Textarea, Title, View$1 as View, classNames, getClassname as getClassName, usePlatform, withPlatform };
