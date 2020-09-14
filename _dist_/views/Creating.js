@@ -102,6 +102,7 @@ export class Creating extends React.Component {
 
     this.state = {
       activeModal: null,
+      groups: [],
       donationEnd: 'date',
       donation: props.donation || defaultDonationRegular,
       highlightErrors: false
@@ -112,6 +113,25 @@ export class Creating extends React.Component {
     this.choseDonationEnd = this.choseDonationEnd.bind(this);
   }
 
+  componentDidMount() {
+    const {
+      vkAPI
+    } = this.props;
+    console.log(vkAPI);
+    vkAPI.getAccessToken(7595761, 'groups').then(v => {
+      vkAPI.callAPIMethod('groups.get', {
+        filter: 'editor',
+        extended: 1,
+        v: '5.122',
+        access_token: v.accessToken
+      }).then(e => {
+        this.setState({
+          groups: e.items
+        });
+      }).catch(e => console.error(e));
+    }).catch(e => console.error(e));
+  }
+
   choseAuthor(user) {
     this.setDonation({
       author: user
@@ -120,22 +140,39 @@ export class Creating extends React.Component {
   }
 
   get authors() {
-    // TODO: необходимо подгружать реальных
-    return defaultAuthors;
+    if (!this.props.userInfo) {
+      return defaultAuthors;
+    }
+
+    return [this.props.userInfo, ...this.state.groups];
   }
 
   create(type) {
     switch (type) {
       case 'target':
+        const dt = { ...defaultDonationTarget
+        };
+
+        if (this.props.userInfo) {
+          dt.author = this.props.userInfo;
+        }
+
         this.setState({
-          donation: defaultDonationTarget
+          donation: dt
         });
         this.props.setPanel('target');
         break;
 
       case 'regular':
+        const dr = { ...defaultDonationRegular
+        };
+
+        if (this.props.userInfo) {
+          dr.author = this.props.userInfo;
+        }
+
         this.setState({
-          donation: defaultDonationRegular
+          donation: dr
         });
         this.props.setPanel('regular');
         break;

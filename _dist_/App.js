@@ -29,6 +29,16 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
+    this.props.vkAPI.getUserInfo().then(user => {
+      const userInfo = {
+        id: user.id,
+        name: user.first_name + ' ' + user.last_name,
+        photo_100: user.photo_100
+      };
+      this.setState({
+        userInfo: userInfo
+      });
+    });
     this.props.vkAPI.onUpdateConfig(data => {
       const schemeAttribute = document.createAttribute('scheme');
       schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
@@ -95,9 +105,13 @@ export class App extends React.Component {
 
   render() {
     const {
+      vkAPI
+    } = this.props;
+    const {
       activeView,
       activePanel,
-      donation
+      donation,
+      userInfo
     } = this.state;
     return /*#__PURE__*/React.createElement(Root, {
       activeView: activeView
@@ -106,12 +120,14 @@ export class App extends React.Component {
       activePanel: activePanel['main'],
       setView: (view, name) => this.setView(view, name)
     }), /*#__PURE__*/React.createElement(Creating, {
+      vkAPI: vkAPI,
       id: "creating",
       activePanel: activePanel['creating'],
       setView: (view, name) => this.setView(view, name),
       setPanel: name => this.setPanel(name),
       goBack: () => this.goBack(),
-      updateDonation: d => this.updateDonation(d)
+      updateDonation: d => this.updateDonation(d),
+      userInfo: userInfo
     }), /*#__PURE__*/React.createElement(Newsfeed, {
       id: "newsfeed",
       setView: (view, name) => this.setView(view, name),
