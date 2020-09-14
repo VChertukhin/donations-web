@@ -81,9 +81,19 @@ export class AchievementEdit extends React.Component {
       pattern: "[0-9]*",
       placeholder: "\u041D\u0430\u0433\u0440\u0430\u0434\u0430 \u0437\u0430 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0443",
       value: achievement.min || undefined,
-      onChange: e => this.setAchievement({
-        min: parseFloat(e.target.value)
-      })
+      onChange: e => {
+        const achievementMin = parseFloat(e.target.value); // prevent passing NaN or negative numbers as donation.need value
+
+        if (!isNaN(achievementMin) && achievementMin >= 0) {
+          this.setAchievement({
+            min: achievementMin
+          });
+        } else {
+          this.setAchievement({
+            min: 0
+          });
+        }
+      }
     })), /*#__PURE__*/React.createElement("div", {
       style: {
         height: 68
