@@ -96,7 +96,7 @@ export class AchievementEdit extends React.Component {
       size: "l",
       stretched: true,
       onClick: () => update(achievement)
-    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u0430\u0433\u0440\u0430\u0434\u0443"))));
+    }, this.props.achievement ? 'Сохранить награду' : 'Создать награду'))));
   }
 
 }
