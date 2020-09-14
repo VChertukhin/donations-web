@@ -74,10 +74,37 @@ export class Creating extends React.Component {
       }
     });
 
+    _defineProperty(this, "isPanelFormValid", panel => {
+      const {
+        donation,
+        date,
+        donationEnd
+      } = this.state;
+
+      switch (panel) {
+        case 'target':
+          return [donation.image, donation.title, donation.need, donation.target, donation.description].every(e => e);
+
+        case 'target2':
+          if (donationEnd == 'date') {
+            return Boolean(date);
+          } else {
+            return true;
+          }
+
+        case 'regular':
+          return [donation.image, donation.title, donation.need, donation.target, donation.description].every(e => e);
+
+        default:
+          return true;
+      }
+    });
+
     this.state = {
       activeModal: null,
       donationEnd: 'date',
-      donation: props.donation || defaultDonationRegular
+      donation: props.donation || defaultDonationRegular,
+      highlightErrors: false
     };
     this.create = this.create.bind(this);
     this.choseAuthor = this.choseAuthor.bind(this);
@@ -128,7 +155,8 @@ export class Creating extends React.Component {
       activeModal,
       date,
       donationEnd,
-      donation
+      donation,
+      highlightErrors
     } = this.state;
     const modal = /*#__PURE__*/React.createElement(ModalRoot, {
       activeModal: activeModal
@@ -165,9 +193,14 @@ export class Creating extends React.Component {
       monthPlaceholder: "\u041C\u0435\u0441\u044F\u0446",
       yearPlaceholder: "\u0413\u043E\u0434",
       popupDirection: "top",
-      onDateChange: d => this.setState({
-        date: d
-      })
+      onDateChange: date => {
+        // set date only if all parts of date are set
+        if (date.month !== 0 && date.day !== 0 && date.year !== 0) {
+          this.setState({
+            date
+          });
+        }
+      }
     }))));
     return /*#__PURE__*/React.createElement(View, {
       id: id,
@@ -229,6 +262,8 @@ export class Creating extends React.Component {
         paddingTop: 4
       }
     }, /*#__PURE__*/React.createElement(CoverLoader, {
+      error: highlightErrors && !donation.image,
+      errorText: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       before: /*#__PURE__*/React.createElement(Icon28PictureOutline, null),
       image: donation.image,
@@ -240,6 +275,8 @@ export class Creating extends React.Component {
       })
     })), /*#__PURE__*/React.createElement(FormLayout, null, /*#__PURE__*/React.createElement(Input, {
       top: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
+      bottom: highlightErrors && !donation.title ? 'Пожалуйста введите название сбора' : '',
+      status: highlightErrors && !donation.title ? 'error' : 'default',
       placeholder: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
       value: donation.title,
       onChange: e => this.setDonation({
@@ -248,6 +285,8 @@ export class Creating extends React.Component {
     }), /*#__PURE__*/React.createElement(Input, {
       pattern: "[0-9]*",
       top: "\u0421\u0443\u043C\u043C\u0430, \u20BD",
+      bottom: highlightErrors && !donation.need ? 'Пожалуйста введите сумму\n(должна быть больше нуля)' : '',
+      status: highlightErrors && !donation.need ? 'error' : 'default',
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0441\u043E\u0431\u0440\u0430\u0442\u044C?",
       value: donation.need || '',
       onChange: e => {
@@ -265,6 +304,8 @@ export class Creating extends React.Component {
       }
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0426\u0435\u043B\u044C",
+      bottom: highlightErrors && !donation.target ? 'Пожалуйста введите цель' : '',
+      status: highlightErrors && !donation.target ? 'error' : 'default',
       placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430",
       value: donation.target,
       onChange: e => this.setDonation({
@@ -272,6 +313,8 @@ export class Creating extends React.Component {
       })
     }), /*#__PURE__*/React.createElement(Textarea, {
       top: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435",
+      bottom: highlightErrors && !donation.description ? 'Пожалуйста введите описание' : '',
+      status: highlightErrors && !donation.description ? 'error' : 'default',
       placeholder: "\u041D\u0430 \u0447\u0442\u043E \u043F\u043E\u0439\u0434\u0443\u0442 \u0434\u0435\u043D\u044C\u0433\u0438 \u0438 \u043A\u0430\u043A \u043E\u043D\u0438 \u043F\u043E\u043C\u043E\u0433\u0443\u0442?",
       value: donation.description,
       onChange: e => this.setDonation({
@@ -289,9 +332,22 @@ export class Creating extends React.Component {
       filled: true,
       vertical: "bottom"
     }, /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "l",
       stretched: true,
-      onClick: () => setPanel('target2')
+      size: "l",
+      onClick: () => {
+        const isValid = this.isPanelFormValid('target');
+
+        if (isValid) {
+          setPanel('target2');
+        } else {
+          this.setState({
+            highlightErrors: true
+          });
+        }
+      },
+      onBlur: () => this.setState({
+        highlightErrors: false
+      })
     }, "\u0414\u0430\u043B\u0435\u0435")))), /*#__PURE__*/React.createElement(Panel, {
       id: "target2"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
@@ -319,6 +375,8 @@ export class Creating extends React.Component {
       onChange: e => e.target.value === 'date' && this.choseDonationEnd('date')
     }, "\u0412 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0443\u044E \u0434\u0430\u0442\u0443")), donationEnd === 'date' && /*#__PURE__*/React.createElement(SelectMimicry, {
       top: "\u0414\u0430\u0442\u0430 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F",
+      bottom: highlightErrors && !date ? 'Пожалуйста выберите дату' : '',
+      status: highlightErrors && !date ? 'error' : 'default',
       placeholder: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443",
       onClick: () => this.setState({
         activeModal: 'date'
@@ -330,10 +388,28 @@ export class Creating extends React.Component {
     }), /*#__PURE__*/React.createElement(FixedLayout, {
       filled: true,
       vertical: "bottom"
-    }, /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "l",
+    }, /*#__PURE__*/React.createElement(Div, {
+      style: donationEnd == 'date' && !this.isPanelFormValid('target2') ? {
+        opacity: 0.5,
+        pointerEvents: 'none'
+      } : {}
+    }, /*#__PURE__*/React.createElement(Button, {
       stretched: true,
-      onClick: () => setPanel('posting')
+      size: "l",
+      onClick: () => {
+        const isValid = this.isPanelFormValid('target2');
+
+        if (isValid) {
+          setPanel('posting');
+        } else {
+          this.setState({
+            highlightErrors: true
+          });
+        }
+      },
+      onBlur: () => this.setState({
+        highlightErrors: false
+      })
     }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440")))), /*#__PURE__*/React.createElement(Panel, {
       id: "regular"
     }, /*#__PURE__*/React.createElement(PanelHeader, {
@@ -348,6 +424,8 @@ export class Creating extends React.Component {
         paddingTop: 4
       }
     }, /*#__PURE__*/React.createElement(CoverLoader, {
+      error: highlightErrors && !donation.image,
+      errorText: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u043B\u043E\u0436\u043A\u0443",
       before: /*#__PURE__*/React.createElement(Icon28PictureOutline, null),
       image: donation.image,
@@ -359,6 +437,8 @@ export class Creating extends React.Component {
       })
     })), /*#__PURE__*/React.createElement(FormLayout, null, /*#__PURE__*/React.createElement(Input, {
       top: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
+      bottom: highlightErrors && !donation.title ? 'Пожалуйста введите название сбора' : '',
+      status: highlightErrors && !donation.title ? 'error' : 'default',
       placeholder: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0431\u043E\u0440\u0430",
       value: donation.title,
       onChange: e => this.setDonation({
@@ -366,15 +446,28 @@ export class Creating extends React.Component {
       })
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0421\u0443\u043C\u043C\u0430 \u0432 \u043C\u0435\u0441\u044F\u0446, \u20BD",
-      type: "number",
+      bottom: highlightErrors && !donation.need ? 'Пожалуйста введите сумму\n(должна быть больше нуля)' : '',
+      status: highlightErrors && !donation.need ? 'error' : 'default',
       pattern: "[0-9]*",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0432 \u043C\u0435\u0441\u044F\u0446?",
-      value: donation.need || undefined,
-      onChange: e => this.setDonation({
-        need: parseFloat(e.target.value)
-      })
+      value: donation.need || '',
+      onChange: e => {
+        const donationNeed = parseFloat(e.target.value); // prevent passing NaN or negative numbers as donation.need value
+
+        if (!isNaN(donationNeed) && donationNeed >= 0) {
+          this.setDonation({
+            need: donationNeed
+          });
+        } else {
+          this.setDonation({
+            need: 0
+          });
+        }
+      }
     }), /*#__PURE__*/React.createElement(Input, {
       top: "\u0426\u0435\u043B\u044C",
+      bottom: highlightErrors && !donation.target ? 'Пожалуйста введите цель сбора' : '',
+      status: highlightErrors && !donation.target ? 'error' : 'default',
       placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u043F\u0440\u0438\u044E\u0442\u0430",
       value: donation.target,
       onChange: e => this.setDonation({
@@ -382,6 +475,8 @@ export class Creating extends React.Component {
       })
     }), /*#__PURE__*/React.createElement(Textarea, {
       top: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435",
+      bottom: highlightErrors && !donation.description ? 'Пожалуйста введите описание сбора' : '',
+      status: highlightErrors && !donation.description ? 'error' : 'default',
       placeholder: "\u041D\u0430 \u0447\u0442\u043E \u043F\u043E\u0439\u0434\u0443\u0442 \u0434\u0435\u043D\u044C\u0433\u0438 \u0438 \u043A\u0430\u043A \u043E\u043D\u0438 \u043F\u043E\u043C\u043E\u0433\u0443\u0442?",
       value: donation.description,
       onChange: e => this.setDonation({
@@ -403,9 +498,22 @@ export class Creating extends React.Component {
       filled: true,
       vertical: "bottom"
     }, /*#__PURE__*/React.createElement(Div, null, /*#__PURE__*/React.createElement(Button, {
-      size: "l",
       stretched: true,
-      onClick: () => setPanel('posting')
+      size: "l",
+      onClick: () => {
+        const isValid = this.isPanelFormValid('regular');
+
+        if (isValid) {
+          setPanel('posting');
+        } else {
+          this.setState({
+            highlightErrors: true
+          });
+        }
+      },
+      onBlur: () => this.setState({
+        highlightErrors: false
+      })
     }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0431\u043E\u0440")))), /*#__PURE__*/React.createElement(Panel, {
       id: "author"
     }, /*#__PURE__*/React.createElement(PanelHeader, {

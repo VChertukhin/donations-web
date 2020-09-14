@@ -3,7 +3,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 import React, { Component } from '../../../web_modules/react.js';
-import { getClassName, classNames, Tappable, withPlatform, ANDROID, IOS } from '../../../web_modules/@vkontakte/vkui.js';
+import { Text, getClassName, classNames, Tappable, withPlatform, ANDROID, IOS } from '../../../web_modules/@vkontakte/vkui.js';
 import { Icon24Cancel, Icon24DismissOverlay } from '../../../web_modules/@vkontakte/icons.js';
 
 class CoverLoader extends Component {
@@ -61,16 +61,18 @@ class CoverLoader extends Component {
       onChange,
       onDismiss,
       onLoadImage,
+      error,
+      errorText,
       ...restProps
     } = this.props;
     const {
       value
     } = this.state;
-    return /*#__PURE__*/React.createElement(Tappable, {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Tappable, {
       disabled: !!value,
       className: classNames(className, getClassName('CoverLoader', platform), {
         'CoverLoader--load': !!value
-      }),
+      }, error ? 'CoverLoader__error' : ''),
       style: { ...style,
         backgroundImage: `url(${value})`
       },
@@ -95,7 +97,10 @@ class CoverLoader extends Component {
     }, /*#__PURE__*/React.createElement("div", {
       className: "CoverLoader__dismissIcon",
       onClick: this.dismiss
-    }, platform === ANDROID && /*#__PURE__*/React.createElement(Icon24Cancel, null), platform === IOS && /*#__PURE__*/React.createElement(Icon24DismissOverlay, null))));
+    }, platform === ANDROID && /*#__PURE__*/React.createElement(Icon24Cancel, null), platform === IOS && /*#__PURE__*/React.createElement(Icon24DismissOverlay, null)))), error && /*#__PURE__*/React.createElement(Text, {
+      weight: "regular",
+      className: "CoverLoader__error_text"
+    }, errorText));
   }
 
 }

@@ -13,5 +13,10 @@ export const todayDate = () => {
 };
 const months = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
 export const dateFormat = date => {
-  return `${date.day} ${months[date.month - 1]} ${date.year}`;
+  // DatePicker may return incorrect values
+  if (date.month == 0 || date.day == 0 || date.year == 0) {
+    return '';
+  } else {
+    return `${date.day} ${months[date.month - 1]} ${date.year}`;
+  }
 };
