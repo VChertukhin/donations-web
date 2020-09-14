@@ -332,7 +332,6 @@ export class Creating extends React.Component {
       top: "\u0421\u0443\u043C\u043C\u0430, \u20BD",
       bottom: highlightErrors && !donation.need ? 'Пожалуйста, введите сумму\n(должна быть больше нуля)' : '',
       status: highlightErrors && !donation.need ? 'error' : 'default',
-      type: "number",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0441\u043E\u0431\u0440\u0430\u0442\u044C?",
       value: donation.need || '',
       onChange: e => {
@@ -495,7 +494,6 @@ export class Creating extends React.Component {
       bottom: highlightErrors && !donation.need ? 'Пожалуйста, введите сумму\n(должна быть больше нуля)' : '',
       status: highlightErrors && !donation.need ? 'error' : 'default',
       pattern: "[0-9]*",
-      type: "number",
       placeholder: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0443\u0436\u043D\u043E \u0432 \u043C\u0435\u0441\u044F\u0446?",
       value: donation.need || '',
       onChange: e => {
