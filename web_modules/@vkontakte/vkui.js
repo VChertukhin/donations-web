@@ -4520,6 +4520,20 @@ var ModalCard$1 = withAdaptivity(withPlatform(ModalCard), {
   viewWidth: true
 });
 
+var IconButton = function IconButton(_ref) {
+  var className = _ref.className,
+      icon = _ref.icon,
+      restProps = objectWithoutProperties(_ref, ["className", "icon"]);
+
+  var Component = restProps.href ? 'a' : 'button';
+  var platform = usePlatform();
+  return /*#__PURE__*/react.createElement(Tappable$1, _extends_1({}, restProps, {
+    Component: Component,
+    activeEffectDelay: 200,
+    className: classNames(getClassname('IconButton', platform), className)
+  }), icon);
+};
+
 var Card = function Card(_ref) {
   var size = _ref.size,
       mode = _ref.mode,
@@ -4554,6 +4568,40 @@ var CardGrid = function CardGrid(_ref) {
     className: classNames(className, getClassname('CardGrid', platform))
   }), children);
 };
+
+var CellButton = function CellButton(_ref) {
+  var className = _ref.className,
+      align = _ref.align,
+      mode = _ref.mode,
+      before = _ref.before,
+      children = _ref.children,
+      stopPropagation = _ref.stopPropagation,
+      Component = _ref.Component,
+      sizeX = _ref.sizeX,
+      restProps = objectWithoutProperties(_ref, ["className", "align", "mode", "before", "children", "stopPropagation", "Component", "sizeX"]);
+
+  var platform = usePlatform();
+  return /*#__PURE__*/react.createElement(Tappable$1, _extends_1({}, restProps, {
+    className: classNames(getClassname('CellButton', platform), className, "CellButton--sizeX-".concat(sizeX), "CellButton--lvl-".concat(mode), "CellButton--aln-".concat(align)),
+    Component: restProps.href ? 'a' : Component
+  }), /*#__PURE__*/react.createElement("div", {
+    className: "CellButton__in"
+  }, before && /*#__PURE__*/react.createElement("div", {
+    className: "CellButton__before"
+  }, before), children && /*#__PURE__*/react.createElement("div", {
+    className: "CellButton__content"
+  }, children)));
+};
+
+CellButton.defaultProps = {
+  mode: 'primary',
+  Component: 'button',
+  align: 'left',
+  stopPropagation: true
+};
+var CellButton$1 = withAdaptivity(CellButton, {
+  sizeX: true
+});
 
 var Header = function Header(_ref) {
   var className = _ref.className,
@@ -4693,6 +4741,120 @@ exports.default = _default;
 
 var Icon24Cancel = /*@__PURE__*/getDefaultExportFromCjs(cancel);
 
+var reorder = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 24 24';
+var id = 'reorder_24';
+var content = '<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="reorder_24"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z" /><path d="M21 18a1 1 0 01-1 1H4a1 1 0 010-2h16a1 1 0 011 1zm0-4a1 1 0 01-1 1H4a1 1 0 010-2h16a1 1 0 011 1zm0-4a1 1 0 01-1 1H4a1 1 0 010-2h16a1 1 0 011 1zM3 6a1 1 0 011-1h16a1 1 0 010 2H4a1 1 0 01-1-1z" fill="currentColor" fill-rule="nonzero" /></g></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon24Reorder = function Icon24Reorder(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 24,
+    height: !isNaN(props.height) ? +props.height : 24
+  }));
+};
+
+Icon24Reorder.mountIcon = mountIcon;
+var _default = Icon24Reorder;
+exports.default = _default;
+
+});
+
+var Icon24Reorder = /*@__PURE__*/getDefaultExportFromCjs(reorder);
+
+var reorder_ios = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 24 24';
+var id = 'reorder_ios_24';
+var content = '<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="reorder_ios_24"><g fill="none" fill-rule="evenodd"><path opacity=".1" d="M0 0h24v24H0z" /><path d="M2.75 7h18.5a.75.75 0 110 1.5H2.75a.75.75 0 010-1.5zm0 4h18.5a.75.75 0 110 1.5H2.75a.75.75 0 110-1.5zm0 4h18.5a.75.75 0 110 1.5H2.75a.75.75 0 110-1.5z" fill="currentColor" fill-rule="nonzero" /></g></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon24ReorderIos = function Icon24ReorderIos(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 24,
+    height: !isNaN(props.height) ? +props.height : 24
+  }));
+};
+
+Icon24ReorderIos.mountIcon = mountIcon;
+var _default = Icon24ReorderIos;
+exports.default = _default;
+
+});
+
+var Icon24ReorderIos = /*@__PURE__*/getDefaultExportFromCjs(reorder_ios);
+
 var chevron = createCommonjsModule(function (module, exports) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -4792,6 +4954,283 @@ SimpleCell.defaultProps = {
 var SimpleCell$1 = withAdaptivity(SimpleCell, {
   sizeX: true
 });
+
+function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var Cell = /*#__PURE__*/function (_Component) {
+  inherits(Cell, _Component);
+
+  var _super = _createSuper$b(Cell);
+
+  function Cell(props) {
+    var _this;
+
+    classCallCheck(this, Cell);
+
+    _this = _super.call(this, props);
+
+    defineProperty(assertThisInitialized(_this), "rootEl", void 0);
+
+    defineProperty(assertThisInitialized(_this), "removeButton", void 0);
+
+    defineProperty(assertThisInitialized(_this), "onRemoveActivateClick", function (e) {
+      e.nativeEvent.stopPropagation();
+      e.preventDefault();
+
+      _this.setState({
+        isRemoveActivated: true
+      });
+
+      _this.document.addEventListener('click', _this.deactivateRemove);
+    });
+
+    defineProperty(assertThisInitialized(_this), "deactivateRemove", function () {
+      _this.setState({
+        isRemoveActivated: false,
+        removeOffset: 0
+      });
+
+      _this.document.removeEventListener('click', _this.deactivateRemove);
+    });
+
+    defineProperty(assertThisInitialized(_this), "onRemoveClick", function (e) {
+      e.nativeEvent.stopImmediatePropagation();
+      e.preventDefault();
+      _this.props.onRemove && _this.props.onRemove(e, _this.rootEl);
+    });
+
+    defineProperty(assertThisInitialized(_this), "getRemoveRef", function (el) {
+      return _this.removeButton = el;
+    });
+
+    defineProperty(assertThisInitialized(_this), "getRootRef", function (element) {
+      _this.rootEl = element;
+      setRef(element, _this.props.getRootRef);
+    });
+
+    defineProperty(assertThisInitialized(_this), "dragShift", void 0);
+
+    defineProperty(assertThisInitialized(_this), "listEl", void 0);
+
+    defineProperty(assertThisInitialized(_this), "siblings", void 0);
+
+    defineProperty(assertThisInitialized(_this), "dragStartIndex", void 0);
+
+    defineProperty(assertThisInitialized(_this), "dragEndIndex", void 0);
+
+    defineProperty(assertThisInitialized(_this), "dragDirection", void 0);
+
+    defineProperty(assertThisInitialized(_this), "onDragStart", function () {
+      _this.setState({
+        dragging: true
+      });
+
+      _this.dragShift = 0;
+      _this.listEl = _this.rootEl.closest('.List');
+      _this.listEl && _this.listEl.classList.add('List--dragging');
+      _this.siblings = Array.prototype.slice.call(_this.rootEl.parentElement.childNodes);
+      _this.dragStartIndex = _this.siblings.indexOf(_this.rootEl);
+    });
+
+    defineProperty(assertThisInitialized(_this), "onDragMove", function (e) {
+      e.originalEvent.preventDefault();
+
+      if (_this.state.removeOffset) {
+        return;
+      }
+
+      _this.rootEl.style.transform = "translateY(".concat(e.shiftY, "px)");
+
+      var rootGesture = _this.rootEl.getBoundingClientRect();
+
+      _this.dragDirection = _this.dragShift - e.shiftY < 0 ? 'down' : 'up';
+      _this.dragShift = e.shiftY;
+      _this.dragEndIndex = _this.dragStartIndex;
+
+      _this.siblings.forEach(function (sibling, siblingIndex) {
+        var siblingGesture = sibling.getBoundingClientRect();
+
+        if (_this.dragStartIndex < siblingIndex) {
+          if (rootGesture.bottom > siblingGesture.top + siblingGesture.height / 2) {
+            if (_this.dragDirection === 'down') {
+              sibling.style.transform = 'translateY(-100%)';
+            }
+
+            _this.dragEndIndex++;
+          }
+
+          if (rootGesture.top < siblingGesture.bottom - siblingGesture.height / 2 && _this.dragDirection === 'up') {
+            sibling.style.transform = 'translateY(0)';
+          }
+        } else if (_this.dragStartIndex > siblingIndex) {
+          if (rootGesture.top < siblingGesture.bottom - siblingGesture.height / 2) {
+            if (_this.dragDirection === 'up') {
+              sibling.style.transform = 'translateY(100%)';
+            }
+
+            _this.dragEndIndex--;
+          }
+
+          if (rootGesture.bottom > siblingGesture.top + siblingGesture.height / 2 && _this.dragDirection === 'down') {
+            sibling.style.transform = 'translateY(0)';
+          }
+        }
+      });
+    });
+
+    defineProperty(assertThisInitialized(_this), "onDragEnd", function () {
+      _this.setState({
+        dragging: false
+      });
+
+      _this.listEl && _this.listEl.classList.remove('List--dragging');
+      _this.props.onDragFinish && _this.props.onDragFinish({
+        from: _this.dragStartIndex,
+        to: _this.dragEndIndex
+      });
+
+      _this.siblings.forEach(function (sibling) {
+        return sibling.style.transform = null;
+      });
+
+      delete _this.dragShift;
+      delete _this.listEl;
+      delete _this.siblings;
+      delete _this.dragStartIndex;
+      delete _this.dragEndIndex;
+      delete _this.dragDirection;
+    });
+
+    defineProperty(assertThisInitialized(_this), "onDragClick", function (e) {
+      e.nativeEvent.stopPropagation();
+      e.preventDefault();
+    });
+
+    _this.state = {
+      isRemoveActivated: false,
+      removeOffset: 0,
+      dragging: false
+    };
+    return _this;
+  }
+
+  createClass(Cell, [{
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.document.removeEventListener('click', this.deactivateRemove);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(_prevProps, prevState) {
+      if (prevState.isRemoveActivated !== this.state.isRemoveActivated && this.state.isRemoveActivated) {
+        this.setState({
+          removeOffset: this.removeButton.offsetWidth
+        });
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          onRemove = _this$props.onRemove,
+          removePlaceholder = _this$props.removePlaceholder,
+          onDragFinish = _this$props.onDragFinish,
+          className = _this$props.className,
+          style = _this$props.style,
+          getRootRef = _this$props.getRootRef,
+          platform = _this$props.platform,
+          before = _this$props.before,
+          after = _this$props.after,
+          disabled = _this$props.disabled,
+          removable = _this$props.removable,
+          draggable = _this$props.draggable,
+          selectable = _this$props.selectable,
+          Component = _this$props.Component,
+          onChange = _this$props.onChange,
+          onClick = _this$props.onClick,
+          name = _this$props.name,
+          checked = _this$props.checked,
+          defaultChecked = _this$props.defaultChecked,
+          restProps = objectWithoutProperties(_this$props, ["onRemove", "removePlaceholder", "onDragFinish", "className", "style", "getRootRef", "platform", "before", "after", "disabled", "removable", "draggable", "selectable", "Component", "onChange", "onClick", "name", "checked", "defaultChecked"]);
+
+      return /*#__PURE__*/react.createElement("div", {
+        className: classNames(getClassname('Cell', platform), {
+          'Cell--dragging': this.state.dragging
+        }, className),
+        style: style,
+        ref: this.getRootRef
+      }, /*#__PURE__*/react.createElement("div", {
+        className: "Cell__in",
+        style: platform === IOS && removable ? {
+          transform: "translateX(-".concat(this.state.removeOffset, "px)")
+        } : null
+      }, /*#__PURE__*/react.createElement(SimpleCell$1, _extends_1({}, restProps, {
+        onClick: draggable || removable ? undefined : onClick,
+        disabled: draggable || removable || disabled,
+        Component: selectable ? 'label' : Component,
+        before: /*#__PURE__*/react.createElement(react.Fragment, null, platform === IOS && removable && /*#__PURE__*/react.createElement("div", {
+          className: "Cell__remove-marker",
+          onClick: this.onRemoveActivateClick
+        }), selectable && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("input", {
+          type: "checkbox",
+          className: "Cell__checkbox",
+          name: name,
+          onChange: onChange,
+          defaultChecked: defaultChecked,
+          checked: checked
+        }), /*#__PURE__*/react.createElement("div", {
+          className: "Cell__marker"
+        }, /*#__PURE__*/react.createElement(SelectedIcon, null))), platform === ANDROID && draggable && /*#__PURE__*/react.createElement(Touch, {
+          onStart: this.onDragStart,
+          onMoveY: this.onDragMove,
+          onEnd: this.onDragEnd,
+          onClick: this.onDragClick,
+          className: "Cell__dragger"
+        }, /*#__PURE__*/react.createElement(Icon24Reorder, null)), before),
+        after: /*#__PURE__*/react.createElement(react.Fragment, null, platform === ANDROID && removable && /*#__PURE__*/react.createElement("div", {
+          className: "Cell__remove-marker"
+        }, /*#__PURE__*/react.createElement(IconButton, {
+          icon: /*#__PURE__*/react.createElement(Icon24Cancel, null),
+          onClick: this.onRemoveClick
+        })), platform === IOS && draggable && /*#__PURE__*/react.createElement(Touch, {
+          className: "Cell__dragger",
+          onStart: this.onDragStart,
+          onMoveY: this.onDragMove,
+          onEnd: this.onDragEnd,
+          onClick: this.onDragClick
+        }, /*#__PURE__*/react.createElement(Icon24ReorderIos, null)), after)
+      }))), platform === IOS && removable && /*#__PURE__*/react.createElement("div", {
+        ref: this.getRemoveRef,
+        className: "Cell__remove",
+        onClick: this.onRemoveClick,
+        style: {
+          transform: "translateX(-".concat(this.state.removeOffset, "px)")
+        }
+      }, /*#__PURE__*/react.createElement("span", {
+        className: "Cell__remove-in"
+      }, removePlaceholder)));
+    }
+  }, {
+    key: "document",
+    get: function get() {
+      return this.context.document || document;
+    }
+  }]);
+
+  return Cell;
+}(react.Component);
+
+defineProperty(Cell, "defaultProps", {
+  removePlaceholder: 'Удалить'
+});
+
+defineProperty(Cell, "contextTypes", {
+  document: propTypes.any
+});
+
+var Cell$1 = withPlatform(Cell);
 
 var Div = function Div(_ref) {
   var className = _ref.className,
@@ -5246,14 +5685,14 @@ var Input$1 = withAdaptivity(Input, {
   sizeY: true
 });
 
-function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$c(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$c(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$c() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var Textarea = /*#__PURE__*/function (_PureComponent) {
   inherits(Textarea, _PureComponent);
 
-  var _super = _createSuper$b(Textarea);
+  var _super = _createSuper$c(Textarea);
 
   function Textarea(props) {
     var _this;
@@ -5621,14 +6060,14 @@ exports.default = _default;
 
 var Icon24Dropdown = /*@__PURE__*/getDefaultExportFromCjs(dropdown$2);
 
-function _createSuper$c(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$c(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$d(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$d(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$c() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$d() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var NativeSelect = /*#__PURE__*/function (_React$Component) {
   inherits(NativeSelect, _React$Component);
 
-  var _super = _createSuper$c(NativeSelect);
+  var _super = _createSuper$d(NativeSelect);
 
   function NativeSelect(props) {
     var _this;
@@ -5798,14 +6237,14 @@ var SelectMimicry$1 = withAdaptivity(SelectMimicry, {
   sizeY: true
 });
 
-function _createSuper$d(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$d(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$e(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$e(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$d() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$e() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var CustomScrollView = /*#__PURE__*/function (_React$Component) {
   inherits(CustomScrollView, _React$Component);
 
-  var _super = _createSuper$d(CustomScrollView);
+  var _super = _createSuper$e(CustomScrollView);
 
   function CustomScrollView() {
     var _this;
@@ -5977,14 +6416,14 @@ var CustomScrollView = /*#__PURE__*/function (_React$Component) {
   return CustomScrollView;
 }(react.Component);
 
-function _createSuper$e(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$e(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$f(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$f(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$e() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$f() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 var CustomSelect = /*#__PURE__*/function (_React$Component) {
   inherits(CustomSelect, _React$Component);
 
-  var _super = _createSuper$e(CustomSelect);
+  var _super = _createSuper$f(CustomSelect);
 
   function CustomSelect(props) {
     var _this;
@@ -6477,15 +6916,15 @@ function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if 
 
 function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$8(Object(source), true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _createSuper$f(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$f(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+function _createSuper$g(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$g(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-function _isNativeReflectConstruct$f() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct$g() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 var DefaultMonths = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
 
 var DatePicker = /*#__PURE__*/function (_Component) {
   inherits(DatePicker, _Component);
 
-  var _super = _createSuper$f(DatePicker);
+  var _super = _createSuper$g(DatePicker);
 
   function DatePicker(props) {
     var _this;
@@ -6714,6 +7153,75 @@ var DatePicker = /*#__PURE__*/function (_Component) {
 
 var DatePicker$1 = withAdaptivity(DatePicker, {});
 
+var cancel_outline = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(react);
+
+var _browserSymbol = _interopRequireDefault(browserSymbol);
+
+
+
+
+
+
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// @ts-ignore
+// @ts-ignore
+var viewBox = '0 0 28 28';
+var id = 'cancel_outline_28';
+var content = '<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" id="cancel_outline_28"><g fill="none" fill-rule="evenodd"><path d="M0 0h28v28H0z" /><path d="M6.293 6.293a1 1 0 011.414 0L14 12.585l6.293-6.292a1 1 0 011.32-.083l.094.083a1 1 0 010 1.414L15.415 14l6.292 6.293a1 1 0 01.083 1.32l-.083.094a1 1 0 01-1.414 0L14 15.415l-6.293 6.292a1 1 0 01-1.32.083l-.094-.083a1 1 0 010-1.414L12.585 14 6.293 7.707a1 1 0 01-.083-1.32z" fill="currentColor" fill-rule="nonzero" /></g></symbol>';
+var isMounted = false;
+
+function mountIcon() {
+  if (!isMounted) {
+    (0, sprite.addSpriteSymbol)(new _browserSymbol.default({
+      id: id,
+      viewBox: viewBox,
+      content: content
+    }));
+    isMounted = true;
+  }
+}
+
+var Icon28CancelOutline = function Icon28CancelOutline(props) {
+  (0, sprite.useIsomorphicLayoutEffect)(function () {
+    mountIcon();
+  }, []);
+  return _react.default.createElement(SvgIcon_1.SvgIcon, (0, es6ObjectAssign.assign)({}, props, {
+    viewBox: viewBox,
+    id: id,
+    width: !isNaN(props.width) ? +props.width : 28,
+    height: !isNaN(props.height) ? +props.height : 28
+  }));
+};
+
+Icon28CancelOutline.mountIcon = mountIcon;
+var _default = Icon28CancelOutline;
+exports.default = _default;
+
+});
+
+var Icon28CancelOutline = /*@__PURE__*/getDefaultExportFromCjs(cancel_outline);
+
+var PanelHeaderClose = function PanelHeaderClose(_ref) {
+  var children = _ref.children,
+      restProps = objectWithoutProperties(_ref, ["children"]);
+
+  var platform = usePlatform();
+  return /*#__PURE__*/react.createElement(PanelHeaderButton, restProps, platform === ANDROID ? /*#__PURE__*/react.createElement(Icon28CancelOutline, null) : children);
+};
+
+PanelHeaderClose.defaultProps = {
+  children: 'Отмена'
+};
+
 var chevron_back = createCommonjsModule(function (module, exports) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -6835,4 +7343,4 @@ var PanelHeaderBack = function PanelHeaderBack(props) {
 
 var PanelHeaderBack$1 = /*#__PURE__*/react.memo(PanelHeaderBack);
 
-export { ANDROID, Avatar, Banner, Button$1 as Button, Card, CardGrid, DatePicker$1 as DatePicker, Div, FixedLayout$1 as FixedLayout, FormLayout, FormLayoutGroup, Group$1 as Group, Header, IOS, Input$1 as Input, List, ModalCard$1 as ModalCard, ModalRoot$1 as ModalRoot, Panel$1 as Panel, PanelHeader$1 as PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, Placeholder, Progress, Radio$1 as Radio, Root$1 as Root, SelectMimicry$1 as SelectMimicry, Separator$1 as Separator, SimpleCell$1 as SimpleCell, Tappable$1 as Tappable, Text, Textarea$1 as Textarea, Title, View$1 as View, classNames, getClassname as getClassName, usePlatform, withPlatform };
+export { ANDROID, Avatar, Banner, Button$1 as Button, Card, CardGrid, Cell$1 as Cell, CellButton$1 as CellButton, DatePicker$1 as DatePicker, Div, FixedLayout$1 as FixedLayout, FormLayout, FormLayoutGroup, Group$1 as Group, Header, IOS, Input$1 as Input, List, ModalCard$1 as ModalCard, ModalRoot$1 as ModalRoot, Panel$1 as Panel, PanelHeader$1 as PanelHeader, PanelHeaderBack$1 as PanelHeaderBack, PanelHeaderClose, Placeholder, Progress, Radio$1 as Radio, Root$1 as Root, Select, SelectMimicry$1 as SelectMimicry, Separator$1 as Separator, SimpleCell$1 as SimpleCell, Tappable$1 as Tappable, Text, Textarea$1 as Textarea, Title, View$1 as View, classNames, getClassname as getClassName, usePlatform, withPlatform };

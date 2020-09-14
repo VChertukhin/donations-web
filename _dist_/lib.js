@@ -20,3 +20,29 @@ export const dateFormat = date => {
     return `${date.day} ${months[date.month - 1]} ${date.year}`;
   }
 };
+const achievementTypes = {
+  repost: 'За репост',
+  amount: ''
+};
+export const achievementDescription = achievement => {
+  if (achievement.type === 'amount') {
+    return moneyFormat(achievement.min) + ' ₽';
+  }
+
+  return achievementTypes[achievement.type];
+};
+export const achievementSort = (a, b) => {
+  if (a.type === 'amount' && b.type === 'amount') {
+    return a.min === b.min ? 0 : a.min > b.min ? 1 : -1;
+  }
+
+  if (a.type === 'repost' && b.type === 'amount') {
+    return -1;
+  }
+
+  if (a.type === 'amount' && b.type === 'repost') {
+    return 1;
+  }
+
+  return 0;
+};

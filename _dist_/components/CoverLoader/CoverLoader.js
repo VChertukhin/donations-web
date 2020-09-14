@@ -63,6 +63,7 @@ class CoverLoader extends Component {
       onLoadImage,
       error,
       errorText,
+      width,
       ...restProps
     } = this.props;
     const {
@@ -71,10 +72,13 @@ class CoverLoader extends Component {
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Tappable, {
       disabled: !!value,
       className: classNames(className, getClassName('CoverLoader', platform), {
-        'CoverLoader--load': !!value
-      }, error ? 'CoverLoader__error' : ''),
+        'CoverLoader--load': !!value,
+        'CoverLoader--square': !!width && width < 160,
+        CoverLoader__error: error
+      }),
       style: { ...style,
-        backgroundImage: `url(${value})`
+        backgroundImage: `url(${value})`,
+        width: width
       },
       getRootRef: getRootRef,
       Component: "label"

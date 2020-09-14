@@ -5,7 +5,9 @@ import { View, Panel, PanelHeader, Placeholder, Button, PanelHeaderBack, Banner,
 import { Icon28TargetOutline, Icon28CalendarOutline, Icon28PictureOutline, Icon24Done } from '../../web_modules/@vkontakte/icons.js';
 import CoverLoader from '../components/CoverLoader/CoverLoader.js';
 import SnippetDonation from '../components/SnippetDonation/SnippetDonation.js';
-import { todayDate, dateFormat } from '../lib.js';
+import { todayDate, dateFormat, achievementSort } from '../lib.js';
+import { Achievements } from './achievements/Achievements.js';
+import { AchievementEdit } from './achievements/AchievementEdit.js';
 const defaultAuthors = [{
   id: 150337771,
   name: 'Матвей Правосудов',
@@ -26,7 +28,8 @@ const defaultDonationRegular = {
     name: 'Счёт VK Pay · 1234'
   },
   author: defaultAuthors[0],
-  finish: undefined
+  finish: undefined,
+  achievements: []
 };
 const defaultDonationTarget = {
   type: 'target',
@@ -38,7 +41,8 @@ const defaultDonationTarget = {
   cashAccount: {
     name: 'Счёт VK Pay · 1234'
   },
-  author: defaultAuthors[0]
+  author: defaultAuthors[0],
+  achievements: []
 };
 export class Creating extends React.Component {
   constructor(props) {
@@ -105,7 +109,8 @@ export class Creating extends React.Component {
       groups: [],
       donationEnd: 'date',
       donation: props.donation || defaultDonationRegular,
-      highlightErrors: false
+      highlightErrors: false,
+      achievementEditIndex: 0
     };
     this.create = this.create.bind(this);
     this.choseAuthor = this.choseAuthor.bind(this);
@@ -184,6 +189,7 @@ export class Creating extends React.Component {
       id,
       activePanel,
       setPanel,
+      setView,
       goBack,
       finishText,
       updateDonation
@@ -193,7 +199,9 @@ export class Creating extends React.Component {
       date,
       donationEnd,
       donation,
-      highlightErrors
+      highlightErrors,
+      achievementEdit,
+      achievementEditIndex
     } = this.state;
     const modal = /*#__PURE__*/React.createElement(ModalRoot, {
       activeModal: activeModal
@@ -438,7 +446,7 @@ export class Creating extends React.Component {
         const isValid = this.isPanelFormValid('target2');
 
         if (isValid) {
-          setPanel('posting');
+          setPanel('achievements');
         } else {
           this.setState({
             highlightErrors: true
@@ -543,7 +551,7 @@ export class Creating extends React.Component {
         const isValid = this.isPanelFormValid('regular');
 
         if (isValid) {
-          setPanel('posting');
+          setPanel('achievements');
         } else {
           this.setState({
             highlightErrors: true
@@ -613,7 +621,56 @@ export class Creating extends React.Component {
       size: "l",
       stretched: true,
       onClick: () => updateDonation(donation)
-    }, finishText || 'Опубликовать')))));
+    }, finishText || 'Опубликовать')))), /*#__PURE__*/React.createElement(Panel, {
+      id: "achievements"
+    }, /*#__PURE__*/React.createElement(Achievements, {
+      setPanel: setPanel,
+      goBack: goBack,
+      achievements: donation.achievements,
+      choseNew: () => setPanel('achievement-new'),
+      choseEdit: item => {
+        this.setState({
+          achievementEditIndex: item,
+          achievementEdit: donation.achievements[item]
+        });
+        setPanel('achievement-edit');
+      },
+      remove: item => {
+        const newAchievements = [...donation.achievements];
+        newAchievements.splice(item, 1);
+        this.setDonation({
+          achievements: newAchievements
+        });
+      }
+    })), /*#__PURE__*/React.createElement(Panel, {
+      id: "achievement-new"
+    }, /*#__PURE__*/React.createElement(AchievementEdit, {
+      setPanel: setPanel,
+      goBack: goBack,
+      update: a => {
+        const newAchievements = [...donation.achievements, a];
+        newAchievements.sort(achievementSort);
+        this.setDonation({
+          achievements: newAchievements
+        });
+        goBack();
+      }
+    })), /*#__PURE__*/React.createElement(Panel, {
+      id: "achievement-edit"
+    }, /*#__PURE__*/React.createElement(AchievementEdit, {
+      setPanel: setPanel,
+      goBack: goBack,
+      achievement: achievementEdit,
+      update: a => {
+        const newAchievements = [...donation.achievements];
+        newAchievements[achievementEditIndex] = a;
+        newAchievements.sort(achievementSort);
+        this.setDonation({
+          achievements: newAchievements
+        });
+        goBack();
+      }
+    })));
   }
 
 }
